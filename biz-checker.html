@@ -4,109 +4,90 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>사업자번호 일괄 조회</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #070c18;
-  --surface: #0d1525;
-  --surface2: #121e32;
-  --border: #1a2a40;
-  --border2: #1f3050;
-  --text: #d8eaf8;
-  --text2: #6a90b8;
-  --text3: #334d6a;
-  --accent: #2878f0;
-  --green: #18c472;  --green-bg: #031810; --green-bd: #0a3d20;
-  --red: #f04848;    --red-bg: #180508;   --red-bd: #4a0a10;
-  --amber: #f0a020;  --amber-bg: #180e00; --amber-bd: #4a2c00;
-  --purple: #9b6ef5; --purple-bg: #0f0520;--purple-bd:#2e1060;
-  --sky: #30b8f8;    --sky-bg: #030f1e;   --sky-bd: #083050;
-  --slate: #4a7098;  --slate-bg: #080f18; --slate-bd: #152030;
-  --orange: #f07030; --orange-bg:#160800; --orange-bd:#4a1a00;
+  --bg:#070c18;--surface:#0d1525;--surface2:#121e32;--border:#1a2a40;--border2:#1f3050;
+  --text:#d8eaf8;--text2:#6a90b8;--text3:#334d6a;--accent:#2878f0;
+  --green:#18c472;--green-bg:#031810;--green-bd:#0a3d20;
+  --red:#f04848;--red-bg:#180508;--red-bd:#4a0a10;
+  --amber:#f0a020;--amber-bg:#180e00;--amber-bd:#4a2c00;
+  --purple:#9b6ef5;--purple-bg:#0f0520;--purple-bd:#2e1060;
+  --sky:#30b8f8;--slate:#4a7098;--slate-bg:#080f18;--slate-bd:#152030;
+  --orange:#f07030;--orange-bg:#160800;--orange-bd:#4a1a00;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 28px 20px 60px;
-}
-.hdr { max-width: 1180px; margin: 0 auto 24px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
-.hdr-l h1 { font-size: 21px; font-weight: 800; color: #eaf4ff; letter-spacing: -.5px; }
-.hdr-l p  { font-size: 12px; color: var(--text3); margin-top: 4px; }
-.hdr-r    { font-size: 12px; color: var(--text3); text-align: right; line-height: 1.8; }
-.upload-section { max-width: 1180px; margin: 0 auto 20px; }
-.upload-zone {
-  border: 2px dashed var(--border2); border-radius: 12px; padding: 28px 24px;
-  text-align: center; cursor: pointer; transition: all .2s;
-  background: var(--surface); position: relative;
-}
-.upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: #071428; }
-.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.upload-icon { font-size: 32px; margin-bottom: 8px; }
-.upload-text { font-size: 14px; font-weight: 700; color: var(--text2); }
-.upload-sub  { font-size: 12px; color: var(--text3); margin-top: 4px; }
-.upload-info { margin-top: 12px; padding: 10px 16px; background: var(--surface2); border-radius: 8px; border: 1px solid var(--border2); font-size: 13px; color: var(--text2); display: none; }
-.upload-info.on { display: block; }
-.col-map { max-width: 1180px; margin: 0 auto 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: none; }
-.col-map.on { display: block; }
-.col-map h3 { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 12px; }
-.col-map-grid { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
-.col-map-item { display: flex; flex-direction: column; gap: 5px; }
-.col-map-item label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: .3px; }
-.col-map-item select { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); border-radius: 6px; padding: 7px 10px; font-family: inherit; font-size: 13px; cursor: pointer; min-width: 160px; }
-.col-map-item select:focus { outline: none; border-color: var(--accent); }
-.toolbar { max-width: 1180px; margin: 0 auto 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.btn { border: none; border-radius: 8px; padding: 10px 22px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; white-space: nowrap; }
-.btn-run { background: linear-gradient(135deg,#1458c8,#2878f0); color:#fff; box-shadow:0 2px 20px #2878f028; }
-.btn-dl  { background: linear-gradient(135deg,#0a6640,#18c472); color:#fff; box-shadow:0 2px 20px #18c47228; display:none; }
-.btn-run:hover:not(:disabled), .btn-dl:hover { filter:brightness(1.1); transform:translateY(-1px); }
-.btn-run:disabled { background:var(--surface2); color:var(--text3); cursor:not-allowed; box-shadow:none; transform:none; }
-.prog-wrap { flex:1; min-width:100px; height:5px; background:var(--surface2); border-radius:99px; overflow:hidden; display:none; }
-.prog-wrap.on { display:block; }
-.prog-bar { height:100%; background:linear-gradient(90deg,#1458c8,#2878f0); border-radius:99px; width:0%; transition:width .25s; }
-.prog-lbl { font-size:12px; color:var(--text2); white-space:nowrap; display:none; }
-.prog-lbl.on { display:block; }
-.summary { max-width:1180px; margin:0 auto 14px; display:none; flex-wrap:wrap; gap:8px; }
-.summary.on { display:flex; }
-.pill { border-radius:20px; padding:5px 14px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid var(--border2); background:var(--surface); color:var(--text3); transition:all .15s; }
-.pill:hover { border-color:var(--accent); color:var(--accent); }
-.pill.act   { border-color:var(--accent); background:#071428; color:var(--accent); }
-.pill[data-s="계속사업자"].act { border-color:var(--green);  background:var(--green-bg);  color:var(--green); }
-.pill[data-s="폐업자"].act     { border-color:var(--red);    background:var(--red-bg);    color:var(--red); }
-.pill[data-s="휴업자"].act     { border-color:var(--amber);  background:var(--amber-bg);  color:var(--amber); }
-.pill[data-s="TAX_ERR"].act   { border-color:var(--purple); background:var(--purple-bg); color:var(--purple); }
-.pill[data-s="NOT_FOUND"].act  { border-color:var(--slate);  background:var(--slate-bg);  color:var(--slate); }
-.pill[data-s="API_ERR"].act   { border-color:var(--orange); background:var(--orange-bg); color:var(--orange); }
-.tbl-wrap { max-width:1180px; margin:0 auto; background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:auto; }
-table { width:100%; border-collapse:collapse; font-size:13px; min-width:820px; }
-thead tr { background:var(--bg); }
-th { padding:11px 16px; font-size:11px; font-weight:600; color:var(--text3); text-align:left; letter-spacing:.4px; text-transform:uppercase; white-space:nowrap; }
-tbody tr { border-top:1px solid var(--border); transition:background .1s; }
-tbody tr:hover { background:var(--surface2); }
-td { padding:10px 16px; vertical-align:middle; }
-.td-num  { color:var(--text3); font-size:11px; font-variant-numeric:tabular-nums; width:36px; }
-.td-name { font-weight:700; color:#cce4ff; }
-.tax-tag { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11px; border-radius:5px; padding:2px 8px; border:1px solid; white-space:nowrap; }
-.t-ok  { background:#06121e; color:#7dd3fc; border-color:#1a3a56; }
-.t-bad { background:#180608; color:#f87171; border-color:#7f1d1d; }
-.badge { display:inline-flex; align-items:center; gap:5px; border-radius:6px; padding:3px 11px; font-size:12px; font-weight:700; border:1px solid transparent; white-space:nowrap; }
-.b-active  { background:var(--green-bg);  color:var(--green);  border-color:var(--green-bd); }
-.b-closed  { background:var(--red-bg);    color:var(--red);    border-color:var(--red-bd); }
-.b-suspend { background:var(--amber-bg);  color:var(--amber);  border-color:var(--amber-bd); }
-.b-taxerr  { background:var(--purple-bg); color:var(--purple); border-color:var(--purple-bd); }
-.b-notfound{ background:var(--slate-bg);  color:var(--slate);  border-color:var(--slate-bd); }
-.b-apierr  { background:var(--orange-bg); color:var(--orange); border-color:var(--orange-bd); }
-.b-pending { background:var(--surface2);  color:var(--text3);  border-color:var(--border2); animation:pulse 1.4s infinite; }
-@keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
-.res-note { color:var(--text3); font-size:12px; }
-.empty-row td { padding:52px; text-align:center; color:var(--text3); }
-.empty-icon   { font-size:32px; margin-bottom:10px; }
-.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1a2a3a; border:1px solid var(--border2); border-radius:10px; padding:12px 20px; font-size:13px; color:var(--text2); box-shadow:0 4px 24px #00000060; display:none; z-index:99; white-space:nowrap; }
-.toast.on { display:block; animation:fadein .3s; }
-@keyframes fadein { from{opacity:0;transform:translateX(-50%) translateY(8px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:28px 20px 60px;}
+.hdr{max-width:1180px;margin:0 auto 24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+.hdr-l h1{font-size:21px;font-weight:800;color:#eaf4ff;letter-spacing:-.5px;}
+.hdr-l p{font-size:12px;color:var(--text3);margin-top:4px;}
+.hdr-r{font-size:12px;color:var(--text3);text-align:right;line-height:1.8;}
+.upload-wrap{max-width:1180px;margin:0 auto 20px;}
+.upload-box{border:2px dashed var(--border2);border-radius:12px;padding:36px 24px;text-align:center;background:var(--surface);position:relative;cursor:pointer;transition:all .2s;}
+.upload-box:hover,.upload-box.drag{border-color:var(--accent);background:#071428;}
+.upload-box input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;}
+.upload-icon{font-size:36px;margin-bottom:10px;}
+.upload-title{font-size:15px;font-weight:700;color:var(--text2);}
+.upload-sub{font-size:12px;color:var(--text3);margin-top:5px;}
+.upload-status{margin-top:12px;padding:10px 16px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);font-size:13px;color:var(--text2);display:none;}
+.upload-status.on{display:block;}
+.col-map{max-width:1180px;margin:0 auto 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:none;}
+.col-map.on{display:block;}
+.col-map h3{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:14px;}
+.col-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+.col-item{display:flex;flex-direction:column;gap:5px;}
+.col-item label{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
+.col-item select{background:var(--surface2);border:1px solid var(--border2);color:var(--text);border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;cursor:pointer;min-width:170px;}
+.col-item select:focus{outline:none;border-color:var(--accent);}
+.toolbar{max-width:1180px;margin:0 auto 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.btn{border:none;border-radius:8px;padding:10px 22px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-blue{background:linear-gradient(135deg,#1458c8,#2878f0);color:#fff;box-shadow:0 2px 16px #2878f030;}
+.btn-green{background:linear-gradient(135deg,#0a6640,#18c472);color:#fff;box-shadow:0 2px 16px #18c47230;display:none;}
+.btn-sm{padding:8px 16px;font-size:13px;}
+.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
+.btn:disabled{background:var(--surface2);color:var(--text3);cursor:not-allowed;box-shadow:none;transform:none;}
+.prog-wrap{flex:1;min-width:100px;height:5px;background:var(--surface2);border-radius:99px;overflow:hidden;display:none;}
+.prog-wrap.on{display:block;}
+.prog-bar{height:100%;background:linear-gradient(90deg,#1458c8,#2878f0);border-radius:99px;width:0%;transition:width .3s;}
+.prog-lbl{font-size:12px;color:var(--text2);display:none;white-space:nowrap;}
+.prog-lbl.on{display:block;}
+.pills{max-width:1180px;margin:0 auto 14px;display:none;flex-wrap:wrap;gap:8px;}
+.pills.on{display:flex;}
+.pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border2);background:var(--surface);color:var(--text3);transition:all .15s;}
+.pill:hover{border-color:var(--accent);color:var(--accent);}
+.pill.act{border-color:var(--accent);background:#071428;color:var(--accent);}
+.pill[data-s="계속사업자"].act{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+.pill[data-s="폐업자"].act{border-color:var(--red);background:var(--red-bg);color:var(--red);}
+.pill[data-s="휴업자"].act{border-color:var(--amber);background:var(--amber-bg);color:var(--amber);}
+.pill[data-s="TAX_ERR"].act{border-color:var(--purple);background:var(--purple-bg);color:var(--purple);}
+.pill[data-s="NOT_FOUND"].act{border-color:var(--slate);background:var(--slate-bg);color:var(--slate);}
+.pill[data-s="API_ERR"].act{border-color:var(--orange);background:var(--orange-bg);color:var(--orange);}
+.tbl-wrap{max-width:1180px;margin:0 auto;background:var(--surface);border-radius:14px;border:1px solid var(--border);overflow:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:820px;}
+thead tr{background:var(--bg);}
+th{padding:11px 16px;font-size:11px;font-weight:600;color:var(--text3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;}
+tbody tr{border-top:1px solid var(--border);transition:background .1s;}
+tbody tr:hover{background:var(--surface2);}
+td{padding:10px 16px;vertical-align:middle;}
+.num{color:var(--text3);font-size:11px;}
+.cname{font-weight:700;color:#cce4ff;}
+.tax-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:5px;padding:2px 8px;border:1px solid;white-space:nowrap;}
+.tok{background:#06121e;color:#7dd3fc;border-color:#1a3a56;}
+.tbad{background:#180608;color:#f87171;border-color:#7f1d1d;}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:3px 11px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap;}
+.ba{background:var(--green-bg);color:var(--green);border-color:var(--green-bd);}
+.bc{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+.bs{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd);}
+.bt{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-bd);}
+.bn{background:var(--slate-bg);color:var(--slate);border-color:var(--slate-bd);}
+.bo{background:var(--orange-bg);color:var(--orange);border-color:var(--orange-bd);}
+.bp{background:var(--surface2);color:var(--text3);border-color:var(--border2);animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+.empty-cell{padding:52px;text-align:center;color:var(--text3);}
+.ei{font-size:32px;margin-bottom:10px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a2a3a;border:1px solid var(--border2);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--text2);box-shadow:0 4px 24px #00000060;display:none;z-index:99;white-space:nowrap;}
+.toast.on{display:block;animation:fi .3s;}
+@keyframes fi{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
 <body>
@@ -117,69 +98,98 @@ td { padding:10px 16px; vertical-align:middle; }
     <p>국세청 공공데이터 API · 엑셀 업로드 → 조회 → 결과 다운로드</p>
   </div>
   <div class="hdr-r">
-    <span id="doneCount">0</span> / <span id="totalCount">0</span> 조회 완료<br>
-    <span style="font-size:11px">마지막 조회: <span id="lastTime">—</span></span>
+    <span id="doneCount">0</span>/<span id="totalCount">0</span> 완료&nbsp;&nbsp;마지막: <span id="lastTime">—</span>
   </div>
 </div>
  
-<div class="upload-section">
-  <div class="upload-zone" id="uploadZone">
-    <input type="file" id="fileInput" accept=".xlsx,.xls" onchange="handleFile(this.files[0])">
+<div class="upload-wrap">
+  <div class="upload-box" id="dropZone">
+    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
     <div class="upload-icon">📂</div>
-    <div class="upload-text">엑셀 파일을 드래그하거나 클릭하여 업로드</div>
-    <div class="upload-sub">.xlsx / .xls 지원 · 업로드 후 컬럼을 지정해 주세요</div>
+    <div class="upload-title">엑셀 파일을 드래그하거나 클릭하여 업로드</div>
+    <div class="upload-sub">.xlsx / .xls / .csv 지원</div>
   </div>
-  <div class="upload-info" id="uploadInfo"></div>
+  <div class="upload-status" id="uploadStatus"></div>
 </div>
  
 <div class="col-map" id="colMap">
-  <h3>📋 컬럼 지정 — 업체명 / TAX1 / TAX2 컬럼을 선택해 주세요</h3>
-  <div class="col-map-grid">
-    <div class="col-map-item">
-      <label>업체명 컬럼</label>
-      <select id="colName"><option value="">— 선택 —</option></select>
+  <h3>📋 컬럼 지정 — 파일의 헤더를 매핑해 주세요</h3>
+  <div class="col-row">
+    <div class="col-item">
+      <label>업체명 컬럼 *</label>
+      <select id="selName"><option value="">— 선택 —</option></select>
     </div>
-    <div class="col-map-item">
-      <label>TAX 1 컬럼</label>
-      <select id="colTax1"><option value="">— 선택 —</option></select>
+    <div class="col-item">
+      <label>TAX 1 컬럼 *</label>
+      <select id="selTax1"><option value="">— 선택 —</option></select>
     </div>
-    <div class="col-map-item">
-      <label>TAX 2 컬럼 (없으면 선택 안 해도 됨)</label>
-      <select id="colTax2"><option value="">— 없음 —</option></select>
+    <div class="col-item">
+      <label>TAX 2 컬럼 (선택)</label>
+      <select id="selTax2"><option value="">— 없음 —</option></select>
     </div>
-    <div class="col-map-item">
+    <div class="col-item">
       <label>&nbsp;</label>
-      <button class="btn btn-run" onclick="applyMapping()" style="padding:8px 18px;font-size:13px">✅ 적용</button>
+      <button class="btn btn-blue btn-sm" onclick="applyMap()">✅ 적용하기</button>
     </div>
   </div>
 </div>
  
 <div class="toolbar">
-  <button class="btn btn-run" id="runBtn" onclick="startCheck()" disabled>🔄 전체 조회 / 새로고침</button>
-  <button class="btn btn-dl"  id="dlBtn"  onclick="downloadExcel()">📥 결과 엑셀 다운로드</button>
+  <button class="btn btn-blue" id="runBtn" onclick="startCheck()" disabled>🔄 전체 조회 / 새로고침</button>
+  <button class="btn btn-green" id="dlBtn" onclick="dlExcel()">📥 엑셀 다운로드</button>
   <div class="prog-wrap" id="pw"><div class="prog-bar" id="pb"></div></div>
   <div class="prog-lbl" id="pl"></div>
 </div>
  
-<div class="summary" id="summary">
-  <button class="pill act" data-s="ALL"        onclick="setFilter('ALL')">전체 <span id="c-ALL">0</span></button>
-  <button class="pill"     data-s="계속사업자"  onclick="setFilter('계속사업자')">✅ 계속영업 <span id="c-계속사업자">0</span></button>
-  <button class="pill"     data-s="폐업자"      onclick="setFilter('폐업자')">❌ 폐업 <span id="c-폐업자">0</span></button>
-  <button class="pill"     data-s="휴업자"      onclick="setFilter('휴업자')">⏸ 휴업 <span id="c-휴업자">0</span></button>
-  <button class="pill"     data-s="NOT_FOUND"   onclick="setFilter('NOT_FOUND')">❓ 미등록 <span id="c-NOT_FOUND">0</span></button>
-  <button class="pill"     data-s="TAX_ERR"     onclick="setFilter('TAX_ERR')">⚠️ TAX ERROR <span id="c-TAX_ERR">0</span></button>
-  <button class="pill"     data-s="API_ERR"     onclick="setFilter('API_ERR')">🔴 API 오류 <span id="c-API_ERR">0</span></button>
+<div class="pills" id="pills">
+  <button class="pill act" data-s="ALL" onclick="setF('ALL')">전체 <span id="c-ALL">0</span></button>
+  <button class="pill" data-s="계속사업자" onclick="setF('계속사업자')">✅ 계속영업 <span id="c-계속사업자">0</span></button>
+  <button class="pill" data-s="폐업자" onclick="setF('폐업자')">❌ 폐업 <span id="c-폐업자">0</span></button>
+  <button class="pill" data-s="휴업자" onclick="setF('휴업자')">⏸ 휴업 <span id="c-휴업자">0</span></button>
+  <button class="pill" data-s="NOT_FOUND" onclick="setF('NOT_FOUND')">❓ 미등록 <span id="c-NOT_FOUND">0</span></button>
+  <button class="pill" data-s="TAX_ERR" onclick="setF('TAX_ERR')">⚠️ TAX ERROR <span id="c-TAX_ERR">0</span></button>
+  <button class="pill" data-s="API_ERR" onclick="setF('API_ERR')">🔴 오류 <span id="c-API_ERR">0</span></button>
 </div>
  
 <div class="tbl-wrap">
   <table>
     <thead>
       <tr>
-        <th class="td-num">#</th>
-        <th>업체명</th>
-        <th>TAX 1</th>
-        <th>TAX 2</th>
-        <th>상태</th>
-        <th>사용된 사업자번호</th>
-        <th>과세유형</th>
-        <th>폐업일</th>
+        <th>#</th><th>업체명</th><th>TAX 1</th><th>TAX 2</th>
+        <th>상태</th><th>사업자번호</th><th>과세유형</th><th>폐업일</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+ 
+<div class="toast" id="toast"></div>
+ 
+<script>
+const NTS_KEY="kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
+const NTS_URL=`https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
+let rows=[],results={},curF="ALL",running=false;
+const isV=n=>/^\d{10}$/.test((n||"").replace(/\D/g,""));
+const cl=n=>(n||"").replace(/\D/g,"");
+const fmt=n=>{const d=cl(n);return d.length===10?`${d.slice(0,3)}-${d.slice(3,5)}-${d.slice(5)}`:n;};
+const SC={
+  "계속사업자":{cls:"ba",icon:"✅",lab:"계속영업"},
+  "휴업자":{cls:"bs",icon:"⏸",lab:"휴업중"},
+  "폐업자":{cls:"bc",icon:"❌",lab:"폐업"},
+  TAX_ERR:{cls:"bt",icon:"⚠️",lab:"TAX ERROR"},
+  NOT_FOUND:{cls:"bn",icon:"❓",lab:"미등록"},
+  API_ERR:{cls:"bo",icon:"🔴",lab:"API 오류"},
+  PENDING:{cls:"bp",icon:"⏳",lab:"조회 중…"},
+};
+ 
+function loadXLSX(){
+  return new Promise((res,rej)=>{
+    if(window.XLSX){res();return;}
+    const s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    s.onload=res;
+    s.onerror=()=>{
+      const s2=document.createElement("script");
+      s2.src="https://unpkg.com/xlsx/dist/xlsx.full.min.js";
+      s2.onload=res;s2.onerror=rej;
+      document.he
