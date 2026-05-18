@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사업자번호 일괄 조회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070c18;
+  --surface: #0d1525;
+  --surface2: #121e32;
+  --border: #1a2a40;
+  --border2: #1f3050;
+  --text: #d8eaf8;
+  --text2: #6a90b8;
+  --text3: #334d6a;
+  --accent: #2878f0;
+  --green: #18c472;  --green-bg: #031810; --green-bd: #0a3d20;
+  --red: #f04848;    --red-bg: #180508;   --red-bd:   #4a0a10;
+  --amber: #f0a020;  --amber-bg: #180e00; --amber-bd: #4a2c00;
+  --purple: #9b6ef5; --purple-bg: #0f0520;--purple-bd:#2e1060;
+  --sky: #30b8f8;    --sky-bg: #030f1e;   --sky-bd:   #083050;
+  --slate: #4a7098;  --slate-bg: #080f18; --slate-bd: #152030;
+  --orange: #f07030; --orange-bg:#160800; --orange-bd:#4a1a00;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 28px 20px 60px;
+}
+
+/* ─ header ─ */
+.hdr { max-width: 1120px; margin: 0 auto 24px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+.hdr-l h1 { font-size: 21px; font-weight: 800; color: #eaf4ff; letter-spacing: -.5px; }
+.hdr-l p  { font-size: 12px; color: var(--text3); margin-top: 4px; }
+.hdr-r    { font-size: 12px; color: var(--text3); text-align: right; line-height: 1.6; }
+
+/* ─ toolbar ─ */
+.toolbar { max-width: 1120px; margin: 0 auto 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.btn-run {
+  background: linear-gradient(135deg, #1458c8, #2878f0);
+  color: #fff; border: none; border-radius: 8px;
+  padding: 10px 26px; font-family: inherit; font-size: 14px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 2px 20px #2878f028; transition: all .2s; white-space: nowrap;
+}
+.btn-run:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-run:disabled { background: var(--surface2); color: var(--text3); cursor: not-allowed; box-shadow: none; }
+
+.prog-wrap { flex:1; min-width:100px; height:5px; background:var(--surface2); border-radius:99px; overflow:hidden; display:none; }
+.prog-wrap.on { display:block; }
+.prog-bar { height:100%; background:linear-gradient(90deg,#1458c8,#2878f0); border-radius:99px; width:0%; transition:width .25s; }
+.prog-lbl { font-size:12px; color:var(--text2); white-space:nowrap; display:none; }
+.prog-lbl.on { display:block; }
+
+/* ─ summary cards ─ */
+.summary { max-width:1120px; margin: 0 auto 14px; display:flex; gap:8px; flex-wrap:wrap; display:none; }
+.summary.on { display:flex; }
+.pill {
+  border-radius:20px; padding:5px 14px; font-size:12px; font-weight:700;
+  cursor:pointer; border:1.5px solid var(--border2);
+  background:var(--surface); color:var(--text3); transition:all .15s;
+}
+.pill:hover { border-color:var(--accent); color:var(--accent); }
+.pill.act   { border-color:var(--accent); background:#071428; color:var(--accent); }
+.pill[data-s="계속사업자"].act { border-color:var(--green);  background:var(--green-bg);  color:var(--green); }
+.pill[data-s="폐업자"].act     { border-color:var(--red);    background:var(--red-bg);    color:var(--red); }
+.pill[data-s="휴업자"].act     { border-color:var(--amber);  background:var(--amber-bg);  color:var(--amber); }
+.pill[data-s="TAX_ERR"].act   { border-color:var(--purple); background:var(--purple-bg); color:var(--purple); }
+.pill[data-s="NOT_FOUND"].act  { border-color:var(--slate);  background:var(--slate-bg);  color:var(--slate); }
+.pill[data-s="API_ERR"].act   { border-color:var(--orange); background:var(--orange-bg); color:var(--orange); }
+
+/* ─ table ─ */
+.tbl-wrap { max-width:1120px; margin:0 auto; background:var(--surface); border-radius:14px; border:1px solid var(--border); overflow:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; min-width:780px; }
+thead tr { background:var(--bg); }
+th { padding:11px 16px; font-size:11px; font-weight:600; color:var(--text3); text-align:left; letter-spacing:.4px; text-transform:uppercase; white-space:nowrap; }
+tbody tr { border-top:1px solid var(--border); transition:background .1s; }
+tbody tr:hover { background:var(--surface2); }
+td { padding:10px 16px; vertical-align:middle; }
+
+.td-num  { color:var(--text3); font-size:11px; font-variant-numeric:tabular-nums; width:36px; }
+.td-name { font-weight:700; color:#cce4ff; }
+
+.tax-tag {
+  display:inline-block; font-family:'JetBrains Mono',monospace;
+  font-size:11px; border-radius:5px; padding:2px 8px; border:1px solid; white-space:nowrap;
+}
+.t-ok  { background:#06121e; color:#7dd3fc; border-color:#1a3a56; }
+.t-bad { background:#180608; color:#f87171; border-color:#7f1d1d; }
+
+.badge {
+  display:inline-flex; align-items:center; gap:5px;
+  border-radius:6px; padding:3px 11px; font-size:12px; font-weight:700;
+  border:1px solid transparent; white-space:nowrap;
+}
+.b-active  { background:var(--green-bg);  color:var(--green);  border-color:var(--green-bd); }
+.b-closed  { background:var(--red-bg);    color:var(--red);    border-color:var(--red-bd); }
+.b-suspend { background:var(--amber-bg);  color:var(--amber);  border-color:var(--amber-bd); }
+.b-taxerr  { background:var(--purple-bg); color:var(--purple); border-color:var(--purple-bd); }
+.b-notfound{ background:var(--slate-bg);  color:var(--slate);  border-color:var(--slate-bd); }
+.b-apierr  { background:var(--orange-bg); color:var(--orange); border-color:var(--orange-bd); }
+.b-pending { background:var(--surface2);  color:var(--text3);  border-color:var(--border2); animation:pulse 1.4s infinite; }
+@keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+.res-name { color:#2de89a; font-weight:700; }
+.res-no   { color:var(--sky); font-family:'JetBrains Mono',monospace; font-size:11px; margin-left:6px; }
+.res-note { color:var(--text3); font-size:12px; }
+
+.empty-row td { padding:52px; text-align:center; color:var(--text3); }
+.empty-icon   { font-size:32px; margin-bottom:10px; }
+
+/* ─ toast ─ */
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:#1a2a3a; border:1px solid var(--border2); border-radius:10px;
+  padding:12px 20px; font-size:13px; color:var(--text2);
+  box-shadow:0 4px 24px #00000060; display:none; z-index:99; white-space:nowrap;
+}
+.toast.on { display:block; animation:fadein .3s; }
+@keyframes fadein { from{opacity:0;transform:translateX(-50%) translateY(8px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-l">
+    <h1>🏥 사업자번호 일괄 조회</h1>
+    <p>국세청 공공데이터 API · TAX1/TAX2 자동 검증 · 업체 62개</p>
+  </div>
+  <div class="hdr-r">
+    <span id="doneCount">0</span> / 62 조회 완료<br>
+    <span style="font-size:11px">마지막 조회: <span id="lastTime">—</span></span>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <button class="btn-run" id="runBtn" onclick="startCheck()">🔄 전체 조회 / 새로고침</button>
+  <div class="prog-wrap" id="pw"><div class="prog-bar" id="pb"></div></div>
+  <div class="prog-lbl" id="pl"></div>
+</div>
+
+<!-- Summary pills -->
+<div class="summary" id="summary">
+  <button class="pill act" data-s="ALL"       onclick="setFilter('ALL')">전체 <span id="c-ALL">62</span></button>
+  <button class="pill"     data-s="계속사업자" onclick="setFilter('계속사업자')">✅ 계속영업 <span id="c-계속사업자">0</span></button>
+  <button class="pill"     data-s="폐업자"    onclick="setFilter('폐업자')">❌ 폐업 <span id="c-폐업자">0</span></button>
+  <button class="pill"     data-s="휴업자"    onclick="setFilter('휴업자')">⏸ 휴업 <span id="c-휴업자">0</span></button>
+  <button class="pill"     data-s="NOT_FOUND" onclick="setFilter('NOT_FOUND')">❓ 미등록 <span id="c-NOT_FOUND">0</span></button>
+  <button class="pill"     data-s="TAX_ERR"   onclick="setFilter('TAX_ERR')">⚠️ TAX ERROR <span id="c-TAX_ERR">0</span></button>
+  <button class="pill"     data-s="API_ERR"   onclick="setFilter('API_ERR')">🔴 API 오류 <span id="c-API_ERR">0</span></button>
+</div>
+
+<!-- Table -->
+<div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="td-num">#</th>
+        <th>업체명 (S2 Account)</th>
+        <th>TAX 1</th>
+        <th>TAX 2</th>
+        <th>상태</th>
+        <th>등록 상호명 / 비고</th>
+        <th>폐업일</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── 국세청 API ──────────────────────────────────────────────
+const NTS_KEY = "kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
+const NTS_URL = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
+
+// ── 데이터 ──────────────────────────────────────────────────
+// [업체명, TAX1, TAX2]
+const DATA = [
+  ["강남뷰티성형외과의원","1041484478","1846900421"],
+  ["동의성단원병원","8068200234",""],
+  ["산본제일병원","1059615382","1179627523"],
+  ["대림성모병원","1239610385","7240400690"],
+  ["에이치플러스 양지병원","1189601448","8738200549"],
+  ["일산동물의료원","1192224481","1282773467"],
+  ["미래치과의원","1272873467","1279234834"],
+  ["항사랑외과의원","2209600252","1289081428"],
+  ["미서울치과의원","6219079611","1299076554"],
+  ["분당척병원","6102754810","1299237685"],
+  ["뉴욕치과의원","6230400271","1329106973"],
+  ["DH메디칼","6071983575","1331705341"],
+  ["한빛여성병원","4031558777","1349061903"],
+  ["화순고려병원","1349601038","1389509132"],
+  ["광명21세기병원","8039701640","1409100704"],
+  ["서울우리병원","1409115449","1630300786"],
+  ["웰성형외과","3019175872","2110946201"],
+  ["오라성형외과의원","3101708455","2110950030"],
+  ["이오의료기","2119038465","2320403301"],
+  ["석정웰파크병원","3041011000","2359300364"],
+  ["다빈메디칼","8419601494","2457600516"],
+  ["마디사랑병원","5041931083","3019163231"],
+  ["옥천성모병원","3196300802","3029601951"],
+  ["마디정형외과의원","5978200058","3039088304"],
+  ["서울산백준호정형외과의원","1219169532","3111028659"],
+  ["성호메디칼","6209083811","3261600989"],
+  ["비앤지글로벌","4102633275","3582601024"],
+  ["대성새마을금고","2362700964","3782000867"],
+  ["유로병원","3078200867","4029167525"],
+  ["제이앤케이","4022378815","4031243235"],
+  ["주승메디칼","4031432353","4035900022"],
+  ["(주)더원메디텍","7198802930","4048602922"],
+  ["지엔(GN)메디칼","8668101811","4082929252"],
+  ["조선대학교병원","4082925230","4088200000"],
+  ["광주현대병원","4088202644","4099018412"],
+  ["엔도코어","4092331145","4102975700"],
+  ["(주)진흥약품","4102975747","4108198202"],
+  ["여천전남병원","4088198202","4169600593"],
+  ["(주)에이치엠메디칼","4170263717","4258603684"],
+  ["제이앤메디칼","1578700739","4331300971"],
+  ["라인업치과의원","6177200498","4531100592"],
+  ["광민의료기","6052667655","5010158512"],
+  ["강동메디","4586200681","5032082682"],
+  ["칠곡경북대학교병원","8987600246","5048213963"],
+  ["ck치과병원","5018206653","5101865510"],
+  ["강남지인병원","6102755589","5219000662"],
+  ["에이치메디컬","1091697666","5244141006"],
+  ["이노메딕스","5244100630","5420556829"],
+  ["와이즈메디칼","2210884603","5453200450"],
+  ["엘리스메드","7491100872","6020859754"],
+  ["UN동물병원","6173484050","6023763660"],
+  ["진(JIN)연세비뇨기과의원","000000000000","6059292112"],
+  ["김해복음병원","6059211234","6109229769"],
+  ["태성아이엔씨","6398200177","6208148132"],
+  ["HS메디칼","111111111","6214100455"],
+  ["태현메디칼","1200926516","6311002868"],
+  ["선한목자병원","3053257883","7610901276"],
+  ["라본병원","2209031582","7699700044"],
+  ["부산성소병원","7679700044","8183901337"],
+  ["소피아여성의원","6179220148","8290300469"],
+  ["맘스여성병원","4029196092","8571003116"],
+  ["퍼스트케어","6630400599","8703501017"],
+  ["(주)동강텍","1293909883","9090909090"],
+];
+
+// ── 유틸 ────────────────────────────────────────────────────
+const isValid = n => /^\d{10}$/.test((n||"").replace(/\D/g,""));
+const clean   = n => (n||"").replace(/\D/g,"");
+const fmt     = n => { const d=clean(n); return d.length===10?`${d.slice(0,3)}-${d.slice(3,5)}-${d.slice(5)}`:n; };
+
+// ── 상태 설정 ─────────────────────────────────────────────
+const S = {
+  "계속사업자":{ cls:"b-active",  icon:"✅", label:"계속영업" },
+  "휴업자":    { cls:"b-suspend", icon:"⏸", label:"휴업중"   },
+  "폐업자":    { cls:"b-closed",  icon:"❌", label:"폐업"     },
+  TAX_ERR:     { cls:"b-taxerr",  icon:"⚠️", label:"TAX ERROR"},
+  NOT_FOUND:   { cls:"b-notfound",icon:"❓", label:"미등록"   },
+  API_ERR:     { cls:"b-apierr",  icon:"🔴", label:"API 오류" },
+  PENDING:     { cls:"b-pending", icon:"⏳", label:"조회 중…" },
+};
+
+// ── 상태 저장 ────────────────────────────────────────────────
+let results = {};      // { name: {status, usedNo, endDt, taxType} }
+let curFilter = "ALL";
+let running   = false;
+
+// ── 국세청 API 호출 (최대 100건 일괄) ─────────────────────
+async function ntsQuery(bizNos) {
+  const res = await fetch(NTS_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "accept": "application/json" },
+    body: JSON.stringify({ b_no: bizNos })
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+// ── 메인 조회 ────────────────────────────────────────────────
+async function startCheck() {
+  if (running) return;
+  running = true;
+  results = {};
+  curFilter = "ALL";
+
+  const runBtn = document.getElementById("runBtn");
+  runBtn.disabled = true;
+  runBtn.textContent = "조회 중...";
+  document.getElementById("pw").classList.add("on");
+  document.getElementById("pl").classList.add("on");
+  document.getElementById("summary").classList.add("on");
+  document.querySelectorAll(".pill").forEach(p => p.classList.toggle("act", p.dataset.s === "ALL"));
+
+  // 사전 분류: 유효 번호만 모으기
+  const jobs = DATA.map(([name, t1, t2]) => {
+    const v1 = isValid(t1), v2 = isValid(t2);
+    const candidates = [v1?clean(t1):null, v2?clean(t2):null].filter(Boolean);
+    if (!v1 && !v2) return { name, status: "TAX_ERR", candidates: [] };
+    return { name, candidates };
+  });
+
+  // 모든 유효 번호 수집 (중복 제거)
+  const allNos = [...new Set(jobs.flatMap(j => j.candidates))];
+
+  // 국세청 API: 100개씩 배치 호출
+  const ntsMap = {}; // bizNo → {b_stt, end_dt, tax_type}
+  showToast("국세청 API 조회 중…");
+
+  for (let i = 0; i < allNos.length; i += 100) {
+    const batch = allNos.slice(i, i + 100);
+    try {
+      const data = await ntsQuery(batch);
+      (data.data || []).forEach(item => {
+        ntsMap[item.b_no] = item;
+      });
+    } catch(e) {
+      batch.forEach(no => { ntsMap[no] = { __err: true }; });
+    }
+    // 진행률 (배치 기준)
+    const pct = Math.round(Math.min(i + 100, allNos.length) / allNos.length * 100);
+    setProgress(pct);
+    setProgressLabel(`${Math.min(i+100, allNos.length)} / ${allNos.length} 번호 처리`);
+    await new Promise(r => setTimeout(r, 200)); // 짧은 대기
+  }
+
+  // 각 업체에 결과 매핑
+  for (const job of jobs) {
+    const { name, status, candidates } = job;
+
+    if (status === "TAX_ERR") {
+      results[name] = { status: "TAX_ERR" };
+      continue;
+    }
+
+    let resolved = null;
+    for (const no of candidates) {
+      const item = ntsMap[no];
+      if (!item) { resolved = { status:"NOT_FOUND", usedNo: fmt(no) }; continue; }
+      if (item.__err) { resolved = { status:"API_ERR", usedNo: fmt(no) }; continue; }
+
+      const bStt  = item.b_stt  || "";
+      const endDt = item.end_dt || "";
+      const taxTp = item.tax_type || "";
+
+      // 미등록 판별
+      if (!bStt && taxTp.includes("등록되지 않은")) {
+        resolved = { status:"NOT_FOUND", usedNo: fmt(no) };
+        continue;
+      }
+
+      const statusKey = bStt || "NOT_FOUND";
+      resolved = { status: statusKey, usedNo: fmt(no), endDt, taxType: taxTp };
+      if (statusKey === "계속사업자") break; // 계속사업자 찾으면 즉시 확정
+    }
+
+    results[name] = resolved || { status:"NOT_FOUND" };
+  }
+
+  // 완료
+  running = false;
+  runBtn.disabled = false;
+  runBtn.textContent = "🔄 전체 조회 / 새로고침";
+  document.getElementById("pw").classList.remove("on");
+  document.getElementById("pl").classList.remove("on");
+  document.getElementById("doneCount").textContent = DATA.length;
+  document.getElementById("lastTime").textContent = new Date().toLocaleTimeString("ko-KR");
+  updateCounts();
+  renderTable();
+  showToast(`✅ 조회 완료 — ${DATA.length}개 업체`);
+}
+
+// ── 진행률 ─────────────────────────────────────────────────
+function setProgress(pct) {
+  document.getElementById("pb").style.width = pct + "%";
+}
+function setProgressLabel(txt) {
+  document.getElementById("pl").textContent = txt;
+}
+
+// ── 필터 ──────────────────────────────────────────────────
+function setFilter(f) {
+  curFilter = f;
+  document.querySelectorAll(".pill").forEach(p => p.classList.toggle("act", p.dataset.s === f));
+  renderTable();
+}
+
+// ── 카운트 업데이트 ───────────────────────────────────────
+function updateCounts() {
+  const counts = {};
+  Object.values(results).forEach(r => { counts[r.status] = (counts[r.status]||0)+1; });
+  ["계속사업자","폐업자","휴업자","NOT_FOUND","TAX_ERR","API_ERR"].forEach(k => {
+    const el = document.getElementById("c-"+k);
+    if (el) el.textContent = counts[k]||0;
+  });
+  document.getElementById("c-ALL").textContent = DATA.length;
+}
+
+// ── 렌더링 ────────────────────────────────────────────────
+function taxTag(raw) {
+  if (!raw) return `<span style="color:var(--text3)">—</span>`;
+  const ok = isValid(raw);
+  return `<span class="tax-tag ${ok?'t-ok':'t-bad'}">${ok ? fmt(clean(raw)) : raw}${ok?'':' ⚠'}</span>`;
+}
+
+function badge(status) {
+  const cfg = S[status] || S.NOT_FOUND;
+  return `<span class="badge ${cfg.cls}">${cfg.icon} ${cfg.label}</span>`;
+}
+
+function renderTable() {
+  const tbody = document.getElementById("tbody");
+  const visible = DATA.filter(([name]) =>
+    curFilter === "ALL" || results[name]?.status === curFilter
+  );
+
+  if (visible.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">
+      <div class="empty-icon">${Object.keys(results).length===0?'🔍':'📭'}</div>
+      ${Object.keys(results).length===0
+        ? '위 버튼을 눌러 조회를 시작하세요'
+        : '해당 상태의 업체가 없습니다'}
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = visible.map(([name, t1, t2]) => {
+    const idx = DATA.findIndex(r => r[0] === name);
+    const r   = results[name];
+    const st  = r?.status || (running ? "PENDING" : null);
+
+    // 등록 상호명 / 비고
+    let detail = "";
+    if (r?.taxType && !r.taxType.includes("등록되지 않은")) {
+      detail = `<span class="res-name">${r.taxType}</span>`;
+    }
+    if (r?.usedNo) detail += `<span class="res-no">${r.usedNo}</span>`;
+    if (r?.status === "TAX_ERR") detail = `<span class="res-note">유효한 번호 없음</span>`;
+    if (r?.status === "API_ERR") detail = `<span style="color:var(--orange);font-size:12px">API 연결 오류</span>`;
+    if (!detail) detail = `<span class="res-note">—</span>`;
+
+    // 폐업일
+    const endDt = r?.endDt
+      ? `<span style="color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px">${r.endDt}</span>`
+      : `<span class="res-note">—</span>`;
+
+    return `<tr>
+      <td class="td-num">${idx+1}</td>
+      <td class="td-name">${name}</td>
+      <td>${taxTag(t1)}</td>
+      <td>${taxTag(t2)}</td>
+      <td>${st ? badge(st) : '<span style="color:var(--text3)">—</span>'}</td>
+      <td>${detail}</td>
+      <td>${endDt}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ── Toast ─────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("on"), 3000);
+}
+
+// ── 초기 렌더 ────────────────────────────────────────────
+renderTable();
+</script>
+</body>
+</html>
