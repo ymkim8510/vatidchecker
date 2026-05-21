@@ -25,28 +25,30 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .hdr p{font-size:12px;color:var(--tx3);margin-top:4px;}
 .hdr-r{font-size:12px;color:var(--tx3);text-align:right;line-height:1.8;}
 
-/* upload - label 방식 (모든 브라우저/OS 호환) */
-.upload-label{
-  display:flex;align-items:center;gap:14px;
-  border:2px dashed var(--bdr2);border-radius:12px;padding:24px 28px;
-  background:var(--sur);cursor:pointer;transition:all .2s;margin-bottom:12px;
+/* 파일 업로드 영역 */
+.upbox{
+  background:var(--sur);border:2px dashed var(--bdr2);border-radius:12px;
+  padding:28px 24px;margin-bottom:12px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
 }
-.upload-label:hover{border-color:var(--ac);background:#071428;}
-.upload-label input[type=file]{
-  font-family:inherit;font-size:13px;color:var(--tx2);
-  background:transparent;border:none;cursor:pointer;flex:1;
+.upbox-icon{font-size:36px;flex-shrink:0;}
+.upbox-text h3{font-size:15px;font-weight:700;color:var(--tx2);margin-bottom:4px;}
+.upbox-text p{font-size:12px;color:var(--tx3);}
+/* input file 직접 노출 - 브라우저 기본 UI 사용 */
+#fi{
+  display:block;
+  margin-top:10px;
+  font-family:inherit;
+  font-size:13px;
+  color:var(--tx2);
+  cursor:pointer;
 }
-.upload-label input[type=file]::-webkit-file-upload-button{
+#fi::file-selector-button{
   background:var(--ac);color:#fff;border:none;border-radius:6px;
-  padding:7px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-right:12px;
+  padding:8px 18px;font-family:inherit;font-size:13px;font-weight:700;
+  cursor:pointer;margin-right:12px;transition:filter .2s;
 }
-.upload-label input[type=file]::file-selector-button{
-  background:var(--ac);color:#fff;border:none;border-radius:6px;
-  padding:7px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-right:12px;
-}
-.ul-icon{font-size:28px;}
-.ul-text{font-size:14px;font-weight:700;color:var(--tx2);}
-.ul-sub{font-size:12px;color:var(--tx3);margin-top:3px;}
+#fi::file-selector-button:hover{filter:brightness(1.15);}
 
 .upinfo{padding:10px 16px;border-radius:8px;border:1px solid var(--bdr2);background:var(--sur2);font-size:13px;color:var(--tx2);display:none;margin-bottom:20px;}
 .upinfo.on{display:block;}
@@ -122,30 +124,30 @@ td{padding:10px 16px;vertical-align:middle;}
   </div>
 </div>
 
-<!-- label로 input 감싸기 - 클릭 JS 없이 브라우저 기본 동작 -->
-<label class="upload-label">
-  <div>
-    <div class="ul-icon">📂</div>
-    <div class="ul-text">엑셀 파일 선택</div>
-    <div class="ul-sub">.xlsx / .xls / .csv</div>
+<!-- input file 직접 노출 방식 -->
+<div class="upbox">
+  <div class="upbox-icon">📂</div>
+  <div class="upbox-text">
+    <h3>엑셀 파일 업로드</h3>
+    <p>.xlsx / .xls / .csv 지원</p>
+    <input type="file" id="fi" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])">
   </div>
-  <input type="file" id="fi" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])">
-</label>
+</div>
 <div class="upinfo" id="upinfo"></div>
 
 <div class="colmap" id="colmap">
   <h3>📋 컬럼 지정 — 업체명 / TAX1 / TAX2 컬럼을 선택해 주세요</h3>
   <div class="crow">
     <div class="ci">
-      <label>업체명 컬럼 *</label>
+      <label for="sN">업체명 컬럼 *</label>
       <select id="sN"><option value="">— 선택 —</option></select>
     </div>
     <div class="ci">
-      <label>TAX 1 컬럼 *</label>
+      <label for="sT1">TAX 1 컬럼 *</label>
       <select id="sT1"><option value="">— 선택 —</option></select>
     </div>
     <div class="ci">
-      <label>TAX 2 컬럼 (선택)</label>
+      <label for="sT2">TAX 2 컬럼 (선택)</label>
       <select id="sT2"><option value="">— 없음 —</option></select>
     </div>
     <div class="ci">
