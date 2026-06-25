@@ -19,13 +19,12 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding:28px 20px 60px;}
-.w{max-width:1180px;margin:0 auto;}
+.w{max-width:1280px;margin:0 auto;}
 .hdr{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
 .hdr h1{font-size:21px;font-weight:800;color:#eaf4ff;letter-spacing:-.5px;}
 .hdr p{font-size:12px;color:var(--tx3);margin-top:4px;}
 .hdr-r{font-size:12px;color:var(--tx3);text-align:right;line-height:1.8;}
 
-/* 파일 업로드 영역 */
 .upbox{
   background:var(--sur);border:2px dashed var(--bdr2);border-radius:12px;
   padding:28px 24px;margin-bottom:12px;
@@ -34,7 +33,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .upbox-icon{font-size:36px;flex-shrink:0;}
 .upbox-text h3{font-size:15px;font-weight:700;color:var(--tx2);margin-bottom:4px;}
 .upbox-text p{font-size:12px;color:var(--tx3);}
-/* input file 직접 노출 - 브라우저 기본 UI 사용 */
 #fi{
   display:block;
   margin-top:10px;
@@ -60,6 +58,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .ci label{font-size:11px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
 .ci select{background:var(--sur2);border:1px solid var(--bdr2);color:var(--tx);border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;cursor:pointer;min-width:170px;}
 .ci select:focus{outline:none;border-color:var(--ac);}
+
 .tb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
 .btn{border:none;border-radius:8px;padding:10px 22px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-b{background:linear-gradient(135deg,#1458c8,#2878f0);color:#fff;box-shadow:0 2px 16px #2878f030;}
@@ -67,11 +66,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .bsm{padding:8px 16px;font-size:13px;}
 .btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
 .btn:disabled{background:var(--sur2);color:var(--tx3);cursor:not-allowed;box-shadow:none;transform:none;}
+
 .pg-w{flex:1;min-width:100px;height:5px;background:var(--sur2);border-radius:99px;overflow:hidden;display:none;}
 .pg-w.on{display:block;}
 .pg-b{height:100%;background:linear-gradient(90deg,#1458c8,#2878f0);border-radius:99px;width:0%;transition:width .3s;}
 .pg-l{font-size:12px;color:var(--tx2);display:none;white-space:nowrap;}
 .pg-l.on{display:block;}
+
 .pills{display:none;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .pills.on{display:flex;}
 .pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr2);background:var(--sur);color:var(--tx3);transition:all .15s;}
@@ -83,8 +84,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .pill[data-s="TAX_ERR"].act{border-color:var(--pu);background:var(--pu-bg);color:var(--pu);}
 .pill[data-s="NOT_FOUND"].act{border-color:var(--sl);background:var(--sl-bg);color:var(--sl);}
 .pill[data-s="API_ERR"].act{border-color:var(--or);background:var(--or-bg);color:var(--or);}
+
 .tbl-w{background:var(--sur);border-radius:14px;border:1px solid var(--bdr);overflow:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:820px;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:1120px;}
 thead tr{background:var(--bg);}
 th{padding:11px 16px;font-size:11px;font-weight:600;color:var(--tx3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;}
 tbody tr{border-top:1px solid var(--bdr);transition:background .1s;}
@@ -95,6 +97,8 @@ td{padding:10px 16px;vertical-align:middle;}
 .tt{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:5px;padding:2px 8px;border:1px solid;white-space:nowrap;}
 .tok{background:#06121e;color:#7dd3fc;border-color:#1a3a56;}
 .tbad{background:#180608;color:#f87171;border-color:#7f1d1d;}
+.tok2{background:var(--gr-bg);color:var(--gr);border-color:var(--gr-bd);}
+.twarn{background:var(--am-bg);color:var(--am);border-color:var(--am-bd);}
 .badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:3px 11px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap;}
 .ba{background:var(--gr-bg);color:var(--gr);border-color:var(--gr-bd);}
 .bc{background:var(--rd-bg);color:var(--rd);border-color:var(--rd-bd);}
@@ -111,20 +115,20 @@ td{padding:10px 16px;vertical-align:middle;}
 @keyframes fi{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
+
 <body>
 <div class="w">
 
 <div class="hdr">
   <div>
     <h1>🏥 사업자번호 일괄 조회</h1>
-    <p>국세청 공공데이터 API · 엑셀 업로드 → 조회 → 결과 다운로드</p>
+    <p>국세청 공공데이터 API · 엑셀 업로드 → 조회 → Bizno 등록명 확인 → 결과 다운로드</p>
   </div>
   <div class="hdr-r">
     <span id="doneCount">0</span>/<span id="totalCount">0</span> 완료&nbsp;&nbsp;마지막: <span id="lastTime">—</span>
   </div>
 </div>
 
-<!-- input file 직접 노출 방식 -->
 <div class="upbox">
   <div class="upbox-icon">📂</div>
   <div class="upbox-text">
@@ -133,6 +137,7 @@ td{padding:10px 16px;vertical-align:middle;}
     <input type="file" id="fi" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])">
   </div>
 </div>
+
 <div class="upinfo" id="upinfo"></div>
 
 <div class="colmap" id="colmap">
@@ -147,7 +152,7 @@ td{padding:10px 16px;vertical-align:middle;}
       <select id="sT1"><option value="">— 선택 —</option></select>
     </div>
     <div class="ci">
-      <label for="sT2">TAX 2 컬럼 (선택)</label>
+      <label for="sT2">TAX 2 컬럼 선택</label>
       <select id="sT2"><option value="">— 없음 —</option></select>
     </div>
     <div class="ci">
@@ -176,170 +181,797 @@ td{padding:10px 16px;vertical-align:middle;}
 
 <div class="tbl-w">
   <table>
-    <thead><tr>
-      <th>#</th><th>업체명</th><th>TAX 1</th><th>TAX 2</th>
-      <th>상태</th><th>사업자번호</th><th>과세유형</th><th>폐업일</th>
-    </tr></thead>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>업체명</th>
+        <th>TAX 1</th>
+        <th>TAX 2</th>
+        <th>상태</th>
+        <th>사업자번호</th>
+        <th>과세유형</th>
+        <th>폐업일</th>
+        <th>비즈노 등록명</th>
+        <th>명칭 비교</th>
+      </tr>
+    </thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
 
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-const NTS_KEY="kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
-const NTS_URL=`https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
-let rows=[],results={},curF="ALL",running=false,rawBody=[];
-const isV=n=>/^\d{10}$/.test((n||"").replace(/\D/g,""));
-const cl=n=>(n||"").replace(/\D/g,"");
-const fmt=n=>{const d=cl(n);return d.length===10?`${d.slice(0,3)}-${d.slice(3,5)}-${d.slice(5)}`:n;};
-const SC={
-  "계속사업자":{cls:"ba",icon:"✅",lab:"계속영업"},
-  "휴업자":{cls:"bs",icon:"⏸",lab:"휴업중"},
-  "폐업자":{cls:"bc",icon:"❌",lab:"폐업"},
-  TAX_ERR:{cls:"bt",icon:"⚠️",lab:"TAX ERROR"},
-  NOT_FOUND:{cls:"bn",icon:"❓",lab:"미등록"},
-  API_ERR:{cls:"bo",icon:"🔴",lab:"API 오류"},
-  PENDING:{cls:"bp",icon:"⏳",lab:"조회 중…"},
+/* =========================
+   API 설정
+========================= */
+const NTS_KEY = "kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
+const NTS_URL = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
+
+const BIZNO_URL = "https://bizno.net/api/fapi";
+const BIZNO_KEY = "L0uYH0t4BxapEcKm20SZlTBoIwdN";
+
+/*
+  Bizno 병렬 처리 개수
+  너무 크게 잡으면 API 제한/CORS/브라우저 제한에 걸릴 수 있어 6~10 권장
+*/
+const BIZNO_CONCURRENCY = 8;
+
+/* =========================
+   전역 변수
+========================= */
+let rows = [];
+let results = {};
+let curF = "ALL";
+let running = false;
+let rawBody = [];
+
+/* =========================
+   공통 유틸
+========================= */
+const isV = n => /^\d{10}$/.test((n || "").replace(/\D/g, ""));
+const cl = n => (n || "").replace(/\D/g, "");
+const fmt = n => {
+  const d = cl(n);
+  return d.length === 10 ? `${d.slice(0,3)}-${d.slice(3,5)}-${d.slice(5)}` : n;
 };
 
+const SC = {
+  "계속사업자": {cls:"ba", icon:"✅", lab:"계속영업"},
+  "휴업자": {cls:"bs", icon:"⏸", lab:"휴업중"},
+  "폐업자": {cls:"bc", icon:"❌", lab:"폐업"},
+  TAX_ERR: {cls:"bt", icon:"⚠️", lab:"TAX ERROR"},
+  NOT_FOUND: {cls:"bn", icon:"❓", lab:"미등록"},
+  API_ERR: {cls:"bo", icon:"🔴", lab:"API 오류"},
+  PENDING: {cls:"bp", icon:"⏳", lab:"조회 중…"}
+};
+
+function sleep(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function setProgress(done, total, label){
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById("pgb").style.width = pct + "%";
+  document.getElementById("pgl").textContent = label ? `${label} ${done}/${total}` : `${done}/${total}`;
+}
+
+function normName(s){
+  return String(s || "")
+    .toLowerCase()
+    .replace(/\s/g, "")
+    .replace(/\(주\)|㈜|주식회사|유한회사|의료법인|재단법인|사단법인|학교법인/g, "")
+    .replace(/[^\w가-힣]/g, "");
+}
+
+function compareName(inputName, registeredName){
+  if(!registeredName) return "확인불가";
+
+  const a = normName(inputName);
+  const b = normName(registeredName);
+
+  if(!a || !b) return "확인불가";
+  if(a === b) return "일치";
+  if(a.includes(b) || b.includes(a)) return "유사";
+  return "불일치";
+}
+
+function nameCheckClass(v){
+  if(v === "일치") return "tok2";
+  if(v === "유사") return "tok";
+  if(v === "조회 제외") return "tok";
+  if(v === "확인불가") return "twarn";
+  return "tbad";
+}
+
+function extractBiznoName(data){
+  /*
+    Bizno API 응답 구조가 계정/버전에 따라 다를 수 있어 최대한 넓게 추출
+    흔한 구조 예:
+    - [{ company: "..."}]
+    - { data: [...] }
+    - { items: [...] }
+    - { list: [...] }
+    - { result: [...] }
+  */
+  let list = [];
+
+  if(Array.isArray(data)){
+    list = data;
+  }else if(data && Array.isArray(data.data)){
+    list = data.data;
+  }else if(data && Array.isArray(data.items)){
+    list = data.items;
+  }else if(data && Array.isArray(data.list)){
+    list = data.list;
+  }else if(data && Array.isArray(data.result)){
+    list = data.result;
+  }else if(data && typeof data === "object"){
+    list = [data];
+  }
+
+  const item = list && list.length ? list[0] : null;
+  if(!item) return "";
+
+  return (
+    item.b_nm ||
+    item.bnm ||
+    item.bizName ||
+    item.bizname ||
+    item.company ||
+    item.companyName ||
+    item.corp_nm ||
+    item.corpName ||
+    item.name ||
+    item.상호명 ||
+    item.회사명 ||
+    item.업체명 ||
+    ""
+  );
+}
+
+/* =========================
+   파일 업로드 / 컬럼 매핑
+========================= */
 function handleFile(file){
-  if(!file)return;
+  if(!file) return;
+
   toast("📂 읽는 중...");
-  if(!window.XLSX){toast("❌ XLSX 로딩 중... 잠시 후 다시 시도");return;}
+
+  if(!window.XLSX){
+    toast("❌ XLSX 로딩 중... 잠시 후 다시 시도");
+    return;
+  }
+
   file.arrayBuffer().then(function(buf){
     try{
-      const wb=XLSX.read(new Uint8Array(buf),{type:"array"});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
-      if(!data||data.length<2){toast("❌ 데이터가 없습니다");return;}
-      const hdrs=data[0].map(function(h){return String(h).trim();});
-      rawBody=data.slice(1).filter(function(r){return r.some(function(c){return String(c).trim();});});
-      ["sN","sT1","sT2"].forEach(function(id,i){
-        const sel=document.getElementById(id);
-        sel.innerHTML=`<option value="">${i===2?"— 없음 —":"— 선택 —"}</option>`;
-        hdrs.forEach(function(h,idx){
-          const op=document.createElement("option");
-          op.value=idx;op.textContent=h||("컬럼 "+(idx+1));
-          const low=h.toLowerCase();
-          if(id==="sN"&&(low.includes("name")||low.includes("업체")||low.includes("상호")||low.includes("confirmed")))op.selected=true;
-          if(id==="sT1"&&(low.includes("tax1")||low==="tax 1"||low==="tax_1"||low.includes("사업자1")))op.selected=true;
-          if(id==="sT2"&&(low.includes("tax2")||low==="tax 2"||low==="tax_2"||low.includes("사업자2")))op.selected=true;
+      const wb = XLSX.read(new Uint8Array(buf), {type:"array"});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(ws, {header:1, defval:""});
+
+      if(!data || data.length < 2){
+        toast("❌ 데이터가 없습니다");
+        return;
+      }
+
+      const hdrs = data[0].map(function(h){ return String(h).trim(); });
+      rawBody = data.slice(1).filter(function(r){
+        return r.some(function(c){ return String(c).trim(); });
+      });
+
+      ["sN","sT1","sT2"].forEach(function(id, i){
+        const sel = document.getElementById(id);
+        sel.innerHTML = `<option value="">${i === 2 ? "— 없음 —" : "— 선택 —"}</option>`;
+
+        hdrs.forEach(function(h, idx){
+          const op = document.createElement("option");
+          op.value = idx;
+          op.textContent = h || ("컬럼 " + (idx + 1));
+
+          const low = h.toLowerCase();
+
+          if(id === "sN" && (
+            low.includes("name") ||
+            low.includes("업체") ||
+            low.includes("상호") ||
+            low.includes("confirmed") ||
+            low.includes("customer")
+          )) op.selected = true;
+
+          if(id === "sT1" && (
+            low.includes("tax1") ||
+            low === "tax 1" ||
+            low === "tax_1" ||
+            low.includes("사업자1") ||
+            low.includes("tax id")
+          )) op.selected = true;
+
+          if(id === "sT2" && (
+            low.includes("tax2") ||
+            low === "tax 2" ||
+            low === "tax_2" ||
+            low.includes("사업자2")
+          )) op.selected = true;
+
           sel.appendChild(op);
         });
       });
-      document.getElementById("upinfo").className="upinfo on";
-      document.getElementById("upinfo").textContent="✅ "+file.name+" — "+rawBody.length+"행 로드 완료 | 컬럼: "+hdrs.join(", ");
+
+      document.getElementById("upinfo").className = "upinfo on";
+      document.getElementById("upinfo").textContent =
+        "✅ " + file.name + " — " + rawBody.length + "행 로드 완료 | 컬럼: " + hdrs.join(", ");
+
       document.getElementById("colmap").classList.add("on");
-      toast("✅ "+rawBody.length+"개 행 로드 — 컬럼을 지정하세요");
-    }catch(err){toast("❌ 파싱 오류: "+err.message);}
-  }).catch(function(err){toast("❌ 파일 읽기 실패: "+err.message);});
+
+      toast("✅ " + rawBody.length + "개 행 로드 — 컬럼을 지정하세요");
+
+    }catch(err){
+      toast("❌ 파싱 오류: " + err.message);
+    }
+  }).catch(function(err){
+    toast("❌ 파일 읽기 실패: " + err.message);
+  });
 }
 
 function applyMap(){
-  const iN=document.getElementById("sN").value;
-  const i1=document.getElementById("sT1").value;
-  const i2=document.getElementById("sT2").value;
-  if(iN===""||i1===""){toast("❌ 업체명과 TAX1은 필수입니다");return;}
-  rows=rawBody.map(function(r){
-    return{name:String(r[iN]||"").trim(),tax1:String(r[i1]||"").trim(),tax2:i2!==""?String(r[i2]||"").trim():""};
-  }).filter(function(r){return r.name;});
-  results={};
-  document.getElementById("runBtn").disabled=false;
-  document.getElementById("totalCount").textContent=rows.length;
-  document.getElementById("c-ALL").textContent=rows.length;
+  const iN = document.getElementById("sN").value;
+  const i1 = document.getElementById("sT1").value;
+  const i2 = document.getElementById("sT2").value;
+
+  if(iN === "" || i1 === ""){
+    toast("❌ 업체명과 TAX1은 필수입니다");
+    return;
+  }
+
+  rows = rawBody.map(function(r){
+    return {
+      name: String(r[iN] || "").trim(),
+      tax1: String(r[i1] || "").trim(),
+      tax2: i2 !== "" ? String(r[i2] || "").trim() : ""
+    };
+  }).filter(function(r){
+    return r.name;
+  });
+
+  results = {};
+  curF = "ALL";
+
+  document.getElementById("runBtn").disabled = false;
+  document.getElementById("totalCount").textContent = rows.length;
+  document.getElementById("doneCount").textContent = 0;
+  document.getElementById("c-ALL").textContent = rows.length;
   document.getElementById("pills").classList.add("on");
-  document.getElementById("dlBtn").style.display="none";
+  document.getElementById("dlBtn").style.display = "none";
+
+  updateCounts();
   renderTable();
-  toast("✅ "+rows.length+"개 업체 적용 — 조회 버튼을 눌러주세요");
+
+  toast("✅ " + rows.length + "개 업체 적용 — 조회 버튼을 눌러주세요");
 }
 
+/* =========================
+   국세청 API
+========================= */
 async function ntsQuery(nos){
-  const r=await fetch(NTS_URL,{method:"POST",headers:{"Content-Type":"application/json","accept":"application/json"},body:JSON.stringify({b_no:nos})});
-  if(!r.ok)throw new Error("HTTP "+r.status);
+  const r = await fetch(NTS_URL, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "accept":"application/json"
+    },
+    body: JSON.stringify({ b_no: nos })
+  });
+
+  if(!r.ok) throw new Error("HTTP " + r.status);
+
   return r.json();
 }
 
-async function startCheck(){
-  if(running||rows.length===0)return;
-  running=true;results={};curF="ALL";
-  const btn=document.getElementById("runBtn");
-  btn.disabled=true;btn.textContent="조회 중...";
-  document.getElementById("pgw").classList.add("on");
-  document.getElementById("pgl").classList.add("on");
-  document.getElementById("dlBtn").style.display="none";
-  document.querySelectorAll(".pill").forEach(function(p){p.classList.toggle("act",p.dataset.s==="ALL");});
-  const jobs=rows.map(function(r){const v1=isV(r.tax1),v2=isV(r.tax2);return{name:r.name,cands:[v1?cl(r.tax1):null,v2?cl(r.tax2):null].filter(Boolean),noV:!v1&&!v2};});
-  const allNos=[...new Set(jobs.flatMap(function(j){return j.cands;}))];
-  const nmap={};
-  for(let i=0;i<allNos.length;i+=100){
-    const batch=allNos.slice(i,i+100);
-    try{const d=await ntsQuery(batch);(d.data||[]).forEach(function(it){nmap[it.b_no]=it;});}
-    catch(e){batch.forEach(function(n){nmap[n]={__err:true};});}
-    document.getElementById("pgb").style.width=Math.round(Math.min(i+100,allNos.length)/allNos.length*100)+"%";
-    document.getElementById("pgl").textContent=Math.min(i+100,allNos.length)+"/"+allNos.length;
-    await new Promise(function(r){setTimeout(r,200);});
-  }
-  for(const j of jobs){
-    if(j.noV){results[j.name]={status:"TAX_ERR"};continue;}
-    let res=null;
-    for(const no of j.cands){
-      const it=nmap[no];
-      if(!it){res={status:"NOT_FOUND",no:fmt(no)};continue;}
-      if(it.__err){res={status:"API_ERR",no:fmt(no)};continue;}
-      const st=it.b_stt||"",ed=it.end_dt||"",tp=it.tax_type||"";
-      if(!st&&tp.includes("등록되지 않은")){res={status:"NOT_FOUND",no:fmt(no)};continue;}
-      res={status:st||"NOT_FOUND",no:fmt(no),endDt:ed,taxType:tp};
-      if(st==="계속사업자")break;
+/* =========================
+   Bizno API
+========================= */
+async function biznoLookup(bno){
+  const cleanNo = cl(bno);
+
+  /*
+    기본은 POST JSON.
+    만약 Bizno fapi가 JSON을 받지 않는 경우를 대비해
+    POST x-www-form-urlencoded도 fallback으로 시도.
+  */
+  const payload = {
+    key: BIZNO_KEY,
+    gb: 2,
+    q: cleanNo
+  };
+
+  try{
+    const r = await fetch(BIZNO_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if(!r.ok) throw new Error("BIZNO JSON HTTP " + r.status);
+
+    const data = await r.json();
+
+    return {
+      biznoName: extractBiznoName(data),
+      raw: data,
+      error: false
+    };
+
+  }catch(jsonErr){
+    /*
+      일부 API는 form 방식만 받을 수 있으므로 fallback
+    */
+    try{
+      const form = new URLSearchParams();
+      form.append("key", BIZNO_KEY);
+      form.append("gb", "2");
+      form.append("q", cleanNo);
+
+      const r2 = await fetch(BIZNO_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Accept": "application/json"
+        },
+        body: form.toString()
+      });
+
+      if(!r2.ok) throw new Error("BIZNO FORM HTTP " + r2.status);
+
+      const data2 = await r2.json();
+
+      return {
+        biznoName: extractBiznoName(data2),
+        raw: data2,
+        error: false
+      };
+
+    }catch(formErr){
+      return {
+        biznoName: "",
+        raw: null,
+        error: true,
+        message: formErr.message || jsonErr.message
+      };
     }
-    results[j.name]=res||{status:"NOT_FOUND"};
   }
-  running=false;
-  btn.disabled=false;btn.textContent="🔄 전체 조회 / 새로고침";
-  document.getElementById("pgw").classList.remove("on");
-  document.getElementById("pgl").classList.remove("on");
-  document.getElementById("doneCount").textContent=rows.length;
-  document.getElementById("lastTime").textContent=new Date().toLocaleTimeString("ko-KR");
-  document.getElementById("dlBtn").style.display="block";
-  updateCounts();renderTable();
-  toast("✅ 조회 완료 — "+rows.length+"개");
 }
 
+/* =========================
+   병렬 처리 실행기
+========================= */
+async function runConcurrent(items, limit, worker, onProgress){
+  let idx = 0;
+  let done = 0;
+
+  async function runner(){
+    while(idx < items.length){
+      const current = idx++;
+      try{
+        await worker(items[current], current);
+      }catch(e){
+        console.warn("worker error", e);
+      }finally{
+        done++;
+        if(onProgress) onProgress(done, items.length);
+      }
+    }
+  }
+
+  const workers = [];
+  const workerCount = Math.min(limit, items.length);
+
+  for(let i = 0; i < workerCount; i++){
+    workers.push(runner());
+  }
+
+  await Promise.all(workers);
+}
+
+/* =========================
+   전체 조회
+========================= */
+async function startCheck(){
+  if(running || rows.length === 0) return;
+
+  running = true;
+  results = {};
+  curF = "ALL";
+
+  const btn = document.getElementById("runBtn");
+  btn.disabled = true;
+  btn.textContent = "조회 중...";
+
+  document.getElementById("pgw").classList.add("on");
+  document.getElementById("pgl").classList.add("on");
+  document.getElementById("dlBtn").style.display = "none";
+  document.getElementById("pgb").style.width = "0%";
+
+  document.querySelectorAll(".pill").forEach(function(p){
+    p.classList.toggle("act", p.dataset.s === "ALL");
+  });
+
+  renderTable();
+
+  try{
+    /*
+      1단계: 후보 사업자번호 구성
+    */
+    const jobs = rows.map(function(r, idx){
+      const v1 = isV(r.tax1);
+      const v2 = isV(r.tax2);
+
+      return {
+        idx,
+        name: r.name,
+        cands: [v1 ? cl(r.tax1) : null, v2 ? cl(r.tax2) : null].filter(Boolean),
+        noV: !v1 && !v2
+      };
+    });
+
+    const allNos = [...new Set(jobs.flatMap(function(j){ return j.cands; }))];
+    const nmap = {};
+
+    /*
+      2단계: 국세청 API batch 조회
+    */
+    if(allNos.length > 0){
+      for(let i = 0; i < allNos.length; i += 100){
+        const batch = allNos.slice(i, i + 100);
+
+        try{
+          const d = await ntsQuery(batch);
+          (d.data || []).forEach(function(it){
+            nmap[it.b_no] = it;
+          });
+        }catch(e){
+          batch.forEach(function(n){
+            nmap[n] = {__err:true};
+          });
+        }
+
+        setProgress(Math.min(i + 100, allNos.length), allNos.length, "국세청");
+        await sleep(180);
+      }
+    }
+
+    /*
+      3단계: 국세청 결과 확정
+    */
+    for(const j of jobs){
+      let finalRes = null;
+
+      if(j.noV){
+        finalRes = {status:"TAX_ERR"};
+      }else{
+        let res = null;
+
+        for(const no of j.cands){
+          const it = nmap[no];
+
+          if(!it){
+            res = {status:"NOT_FOUND", no:fmt(no)};
+            continue;
+          }
+
+          if(it.__err){
+            res = {status:"API_ERR", no:fmt(no)};
+            continue;
+          }
+
+          const st = it.b_stt || "";
+          const ed = it.end_dt || "";
+          const tp = it.tax_type || "";
+
+          if(!st && tp.includes("등록되지 않은")){
+            res = {status:"NOT_FOUND", no:fmt(no)};
+            continue;
+          }
+
+          res = {
+            status: st || "NOT_FOUND",
+            no: fmt(no),
+            endDt: ed,
+            taxType: tp,
+            biznoName: "",
+            nameCheck: ""
+          };
+
+          if(st === "계속사업자") break;
+        }
+
+        finalRes = res || {status:"NOT_FOUND"};
+      }
+
+      if(finalRes.status !== "계속사업자"){
+        finalRes.biznoName = "";
+        finalRes.nameCheck = "조회 제외";
+      }else{
+        finalRes.biznoName = "";
+        finalRes.nameCheck = "대기";
+      }
+
+      results[j.idx] = finalRes;
+    }
+
+    updateCounts();
+    renderTable();
+
+    /*
+      4단계: 계속사업자만 Bizno 병렬 조회
+    */
+    const biznoTargets = jobs.filter(function(j){
+      const res = results[j.idx];
+      return res && res.status === "계속사업자" && res.no;
+    });
+
+    if(biznoTargets.length > 0){
+      setProgress(0, biznoTargets.length, "Bizno");
+
+      await runConcurrent(
+        biznoTargets,
+        BIZNO_CONCURRENCY,
+        async function(j){
+          const res = results[j.idx];
+
+          try{
+            const bz = await biznoLookup(res.no);
+
+            if(bz.error){
+              res.biznoName = "";
+              res.nameCheck = "BIZNO 오류";
+            }else{
+              res.biznoName = bz.biznoName || "";
+              res.nameCheck = compareName(j.name, res.biznoName);
+            }
+
+          }catch(e){
+            res.biznoName = "";
+            res.nameCheck = "BIZNO 오류";
+          }
+
+          results[j.idx] = res;
+        },
+        function(done, total){
+          setProgress(done, total, "Bizno");
+          document.getElementById("doneCount").textContent = rows.length;
+          if(done % 3 === 0 || done === total){
+            renderTable();
+          }
+        }
+      );
+    }
+
+    /*
+      5단계: 완료 처리
+    */
+    running = false;
+
+    btn.disabled = false;
+    btn.textContent = "🔄 전체 조회 / 새로고침";
+
+    document.getElementById("pgw").classList.remove("on");
+    document.getElementById("pgl").classList.remove("on");
+
+    document.getElementById("doneCount").textContent = rows.length;
+    document.getElementById("lastTime").textContent = new Date().toLocaleTimeString("ko-KR");
+    document.getElementById("dlBtn").style.display = "block";
+
+    updateCounts();
+    renderTable();
+
+    toast("✅ 조회 완료 — " + rows.length + "개 / Bizno 확인 " + biznoTargets.length + "개");
+
+  }catch(e){
+    running = false;
+
+    btn.disabled = false;
+    btn.textContent = "🔄 전체 조회 / 새로고침";
+
+    document.getElementById("pgw").classList.remove("on");
+    document.getElementById("pgl").classList.remove("on");
+
+    toast("❌ 조회 중 오류: " + e.message);
+  }
+}
+
+/* =========================
+   엑셀 다운로드
+========================= */
 function dlExcel(){
-  if(rows.length===0||!window.XLSX)return;
-  const SL={"계속사업자":"계속영업","휴업자":"휴업중","폐업자":"폐업",TAX_ERR:"TAX ERROR",NOT_FOUND:"미등록",API_ERR:"API오류"};
-  const data=rows.map(function(r,i){const res=results[r.name]||{};return{"순번":i+1,"업체명":r.name,"TAX1":r.tax1,"TAX2":r.tax2,"상태":SL[res.status]||"—","사업자번호":res.no||"—","과세유형":res.taxType||"—","폐업일":res.endDt||"—"};});
-  const ws=XLSX.utils.json_to_sheet(data);
-  ws["!cols"]=[{wch:5},{wch:24},{wch:14},{wch:14},{wch:12},{wch:16},{wch:26},{wch:12}];
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"결과");
-  const n=new Date();
-  XLSX.writeFile(wb,"사업자조회_"+n.getFullYear()+String(n.getMonth()+1).padStart(2,"0")+String(n.getDate()).padStart(2,"0")+"_"+String(n.getHours()).padStart(2,"0")+String(n.getMinutes()).padStart(2,"0")+".xlsx");
+  if(rows.length === 0 || !window.XLSX) return;
+
+  const SL = {
+    "계속사업자":"계속영업",
+    "휴업자":"휴업중",
+    "폐업자":"폐업",
+    TAX_ERR:"TAX ERROR",
+    NOT_FOUND:"미등록",
+    API_ERR:"API오류"
+  };
+
+  const data = rows.map(function(r, i){
+    const res = results[i] || {};
+
+    return {
+      "순번": i + 1,
+      "업체명": r.name,
+      "TAX1": r.tax1,
+      "TAX2": r.tax2,
+      "상태": SL[res.status] || "—",
+      "사업자번호": res.no || "—",
+      "과세유형": res.taxType || "—",
+      "폐업일": res.endDt || "—",
+      "비즈노 등록명": res.biznoName || "—",
+      "명칭 비교": res.nameCheck || "—"
+    };
+  });
+
+  const ws = XLSX.utils.json_to_sheet(data);
+
+  ws["!cols"] = [
+    {wch:5},
+    {wch:28},
+    {wch:14},
+    {wch:14},
+    {wch:12},
+    {wch:16},
+    {wch:28},
+    {wch:12},
+    {wch:32},
+    {wch:14}
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "결과");
+
+  const n = new Date();
+  const fileName =
+    "사업자조회_Bizno_" +
+    n.getFullYear() +
+    String(n.getMonth() + 1).padStart(2, "0") +
+    String(n.getDate()).padStart(2, "0") +
+    "_" +
+    String(n.getHours()).padStart(2, "0") +
+    String(n.getMinutes()).padStart(2, "0") +
+    ".xlsx";
+
+  XLSX.writeFile(wb, fileName);
+
   toast("📥 다운로드 완료");
 }
 
-function setF(f){curF=f;document.querySelectorAll(".pill").forEach(function(p){p.classList.toggle("act",p.dataset.s===f);});renderTable();}
-function updateCounts(){
-  const c={};Object.values(results).forEach(function(r){c[r.status]=(c[r.status]||0)+1;});
-  ["계속사업자","폐업자","휴업자","NOT_FOUND","TAX_ERR","API_ERR"].forEach(function(k){const el=document.getElementById("c-"+k);if(el)el.textContent=c[k]||0;});
-  document.getElementById("c-ALL").textContent=rows.length;
+/* =========================
+   필터 / 카운트 / 렌더링
+========================= */
+function setF(f){
+  curF = f;
+
+  document.querySelectorAll(".pill").forEach(function(p){
+    p.classList.toggle("act", p.dataset.s === f);
+  });
+
+  renderTable();
 }
-function taxTag(v){if(!v)return'<span style="color:var(--tx3)">—</span>';const ok=isV(v);return'<span class="tt '+(ok?"tok":"tbad")+'">'+(ok?fmt(cl(v)):v)+(ok?"":" ⚠")+'</span>';}
-function bdg(s){const c=SC[s]||SC.NOT_FOUND;return'<span class="badge '+c.cls+'">'+c.icon+' '+c.lab+'</span>';}
+
+function updateCounts(){
+  const c = {};
+
+  Object.values(results).forEach(function(r){
+    if(!r || !r.status) return;
+    c[r.status] = (c[r.status] || 0) + 1;
+  });
+
+  ["계속사업자","폐업자","휴업자","NOT_FOUND","TAX_ERR","API_ERR"].forEach(function(k){
+    const el = document.getElementById("c-" + k);
+    if(el) el.textContent = c[k] || 0;
+  });
+
+  document.getElementById("c-ALL").textContent = rows.length;
+}
+
+function taxTag(v){
+  if(!v) return '<span style="color:var(--tx3)">—</span>';
+
+  const ok = isV(v);
+
+  return '<span class="tt ' + (ok ? "tok" : "tbad") + '">' +
+    (ok ? fmt(cl(v)) : v) +
+    (ok ? "" : " ⚠") +
+    '</span>';
+}
+
+function bdg(s){
+  const c = SC[s] || SC.NOT_FOUND;
+  return '<span class="badge ' + c.cls + '">' + c.icon + ' ' + c.lab + '</span>';
+}
+
 function renderTable(){
-  const tb=document.getElementById("tbody");
-  if(rows.length===0){tb.innerHTML='<tr><td colspan="8" class="ec"><div class="ei">📂</div>엑셀 파일을 선택해 주세요</td></tr>';return;}
-  const vis=rows.filter(function(r){return curF==="ALL"||(results[r.name]&&results[r.name].status===curF);});
-  if(vis.length===0){tb.innerHTML='<tr><td colspan="8" class="ec"><div class="ei">📭</div>해당 상태의 업체가 없습니다</td></tr>';return;}
-  tb.innerHTML=vis.map(function(r){
-    const i=rows.indexOf(r),res=results[r.name],st=res?res.status:(running?"PENDING":null);
-    const tp=res&&res.taxType&&!res.taxType.includes("등록되지 않은")?res.taxType:"—";
-    return'<tr><td class="num">'+(i+1)+'</td><td class="cn">'+r.name+'</td><td>'+taxTag(r.tax1)+'</td><td>'+taxTag(r.tax2)+'</td><td>'+(st?bdg(st):'<span style="color:var(--tx3)">—</span>')+'</td><td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--sk)">'+(res&&res.no?res.no:"—")+'</span></td><td><span style="font-size:12px;color:var(--tx2)">'+tp+'</span></td><td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--rd)">'+(res&&res.endDt?res.endDt:"—")+'</span></td></tr>';
+  const tb = document.getElementById("tbody");
+
+  if(rows.length === 0){
+    tb.innerHTML =
+      '<tr><td colspan="10" class="ec"><div class="ei">📂</div>엑셀 파일을 선택해 주세요</td></tr>';
+    return;
+  }
+
+  const vis = rows
+    .map(function(r, idx){ return {r, idx}; })
+    .filter(function(x){
+      const res = results[x.idx];
+      return curF === "ALL" || (res && res.status === curF);
+    });
+
+  if(vis.length === 0){
+    tb.innerHTML =
+      '<tr><td colspan="10" class="ec"><div class="ei">📭</div>해당 상태의 업체가 없습니다</td></tr>';
+    return;
+  }
+
+  tb.innerHTML = vis.map(function(x){
+    const r = x.r;
+    const i = x.idx;
+    const res = results[i];
+    const st = res ? res.status : (running ? "PENDING" : null);
+    const tp = res && res.taxType && !res.taxType.includes("등록되지 않은") ? res.taxType : "—";
+    const bizName = res && res.biznoName ? res.biznoName : "—";
+    const nameCheck = res && res.nameCheck ? res.nameCheck : "—";
+
+    return '' +
+      '<tr>' +
+        '<td class="num">' + (i + 1) + '</td>' +
+        '<td class="cn">' + escapeHtml(r.name) + '</td>' +
+        '<td>' + taxTag(r.tax1) + '</td>' +
+        '<td>' + taxTag(r.tax2) + '</td>' +
+        '<td>' + (st ? bdg(st) : '<span style="color:var(--tx3)">—</span>') + '</td>' +
+        '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--sk)">' +
+          (res && res.no ? res.no : "—") +
+        '</span></td>' +
+        '<td><span style="font-size:12px;color:var(--tx2)">' + escapeHtml(tp) + '</span></td>' +
+        '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--rd)">' +
+          (res && res.endDt ? res.endDt : "—") +
+        '</span></td>' +
+        '<td><span style="font-size:12px;color:var(--tx2)">' + escapeHtml(bizName) + '</span></td>' +
+        '<td><span class="tt ' + nameCheckClass(nameCheck) + '">' + escapeHtml(nameCheck) + '</span></td>' +
+      '</tr>';
   }).join("");
 }
+
+function escapeHtml(v){
+  return String(v || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* =========================
+   Toast
+========================= */
 let tt;
-function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){el.classList.remove("on");},3500);}
+
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("on");
+
+  clearTimeout(tt);
+
+  tt = setTimeout(function(){
+    el.classList.remove("on");
+  }, 3500);
+}
+
 renderTable();
 </script>
 </body>
