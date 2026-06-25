@@ -6,6 +6,7 @@
 <title>사업자번호 일괄 조회</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --bg:#070c18;--sur:#0d1525;--sur2:#121e32;--bdr:#1a2a40;--bdr2:#1f3050;
@@ -48,34 +49,59 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 }
 #fi::file-selector-button:hover{filter:brightness(1.15);}
 
-.upinfo{padding:10px 16px;border-radius:8px;border:1px solid var(--bdr2);background:var(--sur2);font-size:13px;color:var(--tx2);display:none;margin-bottom:20px;}
+.upinfo{
+  padding:10px 16px;border-radius:8px;border:1px solid var(--bdr2);
+  background:var(--sur2);font-size:13px;color:var(--tx2);
+  display:none;margin-bottom:20px;
+}
 .upinfo.on{display:block;}
-.colmap{background:var(--sur);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px;display:none;margin-bottom:20px;}
+
+.colmap{
+  background:var(--sur);border:1px solid var(--bdr);border-radius:12px;
+  padding:18px 20px;display:none;margin-bottom:20px;
+}
 .colmap.on{display:block;}
 .colmap h3{font-size:13px;font-weight:700;color:var(--tx2);margin-bottom:14px;}
 .crow{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
 .ci{display:flex;flex-direction:column;gap:5px;}
 .ci label{font-size:11px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
-.ci select{background:var(--sur2);border:1px solid var(--bdr2);color:var(--tx);border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;cursor:pointer;min-width:170px;}
+.ci select{
+  background:var(--sur2);border:1px solid var(--bdr2);color:var(--tx);
+  border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;
+  cursor:pointer;min-width:170px;
+}
 .ci select:focus{outline:none;border-color:var(--ac);}
 
 .tb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-.btn{border:none;border-radius:8px;padding:10px 22px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn{
+  border:none;border-radius:8px;padding:10px 22px;font-family:inherit;
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
 .btn-b{background:linear-gradient(135deg,#1458c8,#2878f0);color:#fff;box-shadow:0 2px 16px #2878f030;}
 .btn-g{background:linear-gradient(135deg,#0a6640,#18c472);color:#fff;box-shadow:0 2px 16px #18c47230;display:none;}
 .bsm{padding:8px 16px;font-size:13px;}
 .btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
 .btn:disabled{background:var(--sur2);color:var(--tx3);cursor:not-allowed;box-shadow:none;transform:none;}
 
-.pg-w{flex:1;min-width:100px;height:5px;background:var(--sur2);border-radius:99px;overflow:hidden;display:none;}
+.pg-w{
+  flex:1;min-width:100px;height:5px;background:var(--sur2);
+  border-radius:99px;overflow:hidden;display:none;
+}
 .pg-w.on{display:block;}
-.pg-b{height:100%;background:linear-gradient(90deg,#1458c8,#2878f0);border-radius:99px;width:0%;transition:width .3s;}
+.pg-b{
+  height:100%;background:linear-gradient(90deg,#1458c8,#2878f0);
+  border-radius:99px;width:0%;transition:width .3s;
+}
 .pg-l{font-size:12px;color:var(--tx2);display:none;white-space:nowrap;}
 .pg-l.on{display:block;}
 
 .pills{display:none;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .pills.on{display:flex;}
-.pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr2);background:var(--sur);color:var(--tx3);transition:all .15s;}
+.pill{
+  border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;
+  cursor:pointer;border:1.5px solid var(--bdr2);background:var(--sur);
+  color:var(--tx3);transition:all .15s;
+}
 .pill:hover{border-color:var(--ac);color:var(--ac);}
 .pill.act{border-color:var(--ac);background:#071428;color:var(--ac);}
 .pill[data-s="계속사업자"].act{border-color:var(--gr);background:var(--gr-bg);color:var(--gr);}
@@ -88,18 +114,28 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .tbl-w{background:var(--sur);border-radius:14px;border:1px solid var(--bdr);overflow:auto;}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:1120px;}
 thead tr{background:var(--bg);}
-th{padding:11px 16px;font-size:11px;font-weight:600;color:var(--tx3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;}
+th{
+  padding:11px 16px;font-size:11px;font-weight:600;color:var(--tx3);
+  text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;
+}
 tbody tr{border-top:1px solid var(--bdr);transition:background .1s;}
 tbody tr:hover{background:var(--sur2);}
 td{padding:10px 16px;vertical-align:middle;}
 .num{color:var(--tx3);font-size:11px;}
 .cn{font-weight:700;color:#cce4ff;}
-.tt{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:5px;padding:2px 8px;border:1px solid;white-space:nowrap;}
+.tt{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;
+  border-radius:5px;padding:2px 8px;border:1px solid;white-space:nowrap;
+}
 .tok{background:#06121e;color:#7dd3fc;border-color:#1a3a56;}
 .tbad{background:#180608;color:#f87171;border-color:#7f1d1d;}
 .tok2{background:var(--gr-bg);color:var(--gr);border-color:var(--gr-bd);}
 .twarn{background:var(--am-bg);color:var(--am);border-color:var(--am-bd);}
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:3px 11px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap;}
+
+.badge{
+  display:inline-flex;align-items:center;gap:5px;border-radius:6px;
+  padding:3px 11px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap;
+}
 .ba{background:var(--gr-bg);color:var(--gr);border-color:var(--gr-bd);}
 .bc{background:var(--rd-bg);color:var(--rd);border-color:var(--rd-bd);}
 .bs{background:var(--am-bg);color:var(--am);border-color:var(--am-bd);}
@@ -108,11 +144,20 @@ td{padding:10px 16px;vertical-align:middle;}
 .bo{background:var(--or-bg);color:var(--or);border-color:var(--or-bd);}
 .bp{background:var(--sur2);color:var(--tx3);border-color:var(--bdr2);animation:pu 1.4s infinite;}
 @keyframes pu{0%,100%{opacity:.5}50%{opacity:1}}
+
 .ec{padding:52px;text-align:center;color:var(--tx3);}
 .ei{font-size:32px;margin-bottom:10px;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a2a3a;border:1px solid var(--bdr2);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--tx2);box-shadow:0 4px 24px #00000060;display:none;z-index:99;white-space:nowrap;}
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:#1a2a3a;border:1px solid var(--bdr2);border-radius:10px;
+  padding:12px 20px;font-size:13px;color:var(--tx2);
+  box-shadow:0 4px 24px #00000060;display:none;z-index:99;white-space:nowrap;
+}
 .toast.on{display:block;animation:fi .3s;}
-@keyframes fi{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes fi{
+  from{opacity:0;transform:translateX(-50%) translateY(8px)}
+  to{opacity:1;transform:translateX(-50%) translateY(0)}
+}
 </style>
 </head>
 
@@ -122,7 +167,7 @@ td{padding:10px 16px;vertical-align:middle;}
 <div class="hdr">
   <div>
     <h1>🏥 사업자번호 일괄 조회</h1>
-    <p>국세청 공공데이터 API · 엑셀 업로드 → 조회 → Bizno 등록명 확인 → 결과 다운로드</p>
+    <p>국세청 공공데이터 API · 엑셀 업로드 → 상태 조회 → Bizno 등록명 확인 → 결과 다운로드</p>
   </div>
   <div class="hdr-r">
     <span id="doneCount">0</span>/<span id="totalCount">0</span> 완료&nbsp;&nbsp;마지막: <span id="lastTime">—</span>
@@ -214,10 +259,11 @@ const BIZNO_URL = "https://bizno.net/api/fapi";
 const BIZNO_KEY = "L0uYH0t4BxapEcKm20SZlTBoIwdN";
 
 /*
-  Bizno 병렬 처리 개수
-  너무 크게 잡으면 API 제한/CORS/브라우저 제한에 걸릴 수 있어 6~10 권장
+  병렬 처리 개수
+  너무 높이면 API 제한/브라우저 제한/CORS 에러 가능성이 있습니다.
+  6~8 정도를 권장합니다.
 */
-const BIZNO_CONCURRENCY = 8;
+const BIZNO_CONCURRENCY = 6;
 
 /* =========================
    전역 변수
@@ -258,6 +304,15 @@ function setProgress(done, total, label){
   document.getElementById("pgl").textContent = label ? `${label} ${done}/${total}` : `${done}/${total}`;
 }
 
+function escapeHtml(v){
+  return String(v || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 function normName(s){
   return String(s || "")
     .toLowerCase()
@@ -283,19 +338,27 @@ function nameCheckClass(v){
   if(v === "유사") return "tok";
   if(v === "조회 제외") return "tok";
   if(v === "확인불가") return "twarn";
+  if(v === "대기") return "twarn";
   return "tbad";
 }
 
+/* =========================
+   Bizno 응답 파싱 강화
+========================= */
 function extractBiznoName(data){
+  if(!data) return "";
+
   /*
-    Bizno API 응답 구조가 계정/버전에 따라 다를 수 있어 최대한 넓게 추출
-    흔한 구조 예:
-    - [{ company: "..."}]
-    - { data: [...] }
-    - { items: [...] }
-    - { list: [...] }
-    - { result: [...] }
+    문자열 JSON이 한 번 더 감싸져 있는 경우 대비
   */
+  if(typeof data === "string"){
+    try{
+      data = JSON.parse(data);
+    }catch(e){
+      return "";
+    }
+  }
+
   let list = [];
 
   if(Array.isArray(data)){
@@ -308,28 +371,93 @@ function extractBiznoName(data){
     list = data.list;
   }else if(data && Array.isArray(data.result)){
     list = data.result;
+  }else if(data && Array.isArray(data.rows)){
+    list = data.rows;
   }else if(data && typeof data === "object"){
     list = [data];
   }
 
-  const item = list && list.length ? list[0] : null;
-  if(!item) return "";
+  if(!list.length) return "";
 
-  return (
-    item.b_nm ||
-    item.bnm ||
-    item.bizName ||
-    item.bizname ||
-    item.company ||
-    item.companyName ||
-    item.corp_nm ||
-    item.corpName ||
-    item.name ||
-    item.상호명 ||
-    item.회사명 ||
-    item.업체명 ||
-    ""
-  );
+  const item = list[0];
+
+  /*
+    예상 가능한 상호명 필드명 최대한 포함
+  */
+  const directFields = [
+    "b_nm",
+    "bNm",
+    "bnm",
+    "bizName",
+    "bizname",
+    "businessName",
+    "business_name",
+    "company",
+    "companyName",
+    "company_name",
+    "corp_nm",
+    "corpName",
+    "corp_name",
+    "name",
+    "nm",
+    "entrnm",
+    "korentrnm",
+    "bnsnm",
+    "상호",
+    "상호명",
+    "회사명",
+    "업체명",
+    "법인명"
+  ];
+
+  for(const f of directFields){
+    if(item && item[f]){
+      return String(item[f]).trim();
+    }
+  }
+
+  /*
+    혹시 중첩 object 안에 있는 경우 재귀적으로 탐색
+  */
+  const found = findNameRecursive(item);
+  return found || "";
+}
+
+function findNameRecursive(obj){
+  if(!obj || typeof obj !== "object") return "";
+
+  const preferredKeys = [
+    "b_nm",
+    "bizName",
+    "company",
+    "companyName",
+    "corp_nm",
+    "name",
+    "entrnm",
+    "상호명",
+    "상호",
+    "업체명",
+    "회사명"
+  ];
+
+  for(const k of preferredKeys){
+    if(obj[k] && typeof obj[k] !== "object"){
+      return String(obj[k]).trim();
+    }
+  }
+
+  for(const k in obj){
+    if(!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+
+    const v = obj[k];
+
+    if(v && typeof v === "object"){
+      const nested = findNameRecursive(v);
+      if(nested) return nested;
+    }
+  }
+
+  return "";
 }
 
 /* =========================
@@ -357,6 +485,7 @@ function handleFile(file){
       }
 
       const hdrs = data[0].map(function(h){ return String(h).trim(); });
+
       rawBody = data.slice(1).filter(function(r){
         return r.some(function(c){ return String(c).trim(); });
       });
@@ -464,83 +593,129 @@ async function ntsQuery(nos){
     body: JSON.stringify({ b_no: nos })
   });
 
-  if(!r.ok) throw new Error("HTTP " + r.status);
+  if(!r.ok) throw new Error("NTS HTTP " + r.status);
 
   return r.json();
 }
 
 /* =========================
-   Bizno API
+   Bizno API 수정 최종 버전
 ========================= */
 async function biznoLookup(bno){
   const cleanNo = cl(bno);
 
-  /*
-    기본은 POST JSON.
-    만약 Bizno fapi가 JSON을 받지 않는 경우를 대비해
-    POST x-www-form-urlencoded도 fallback으로 시도.
-  */
-  const payload = {
-    key: BIZNO_KEY,
-    gb: 2,
-    q: cleanNo
-  };
+  if(!cleanNo || cleanNo.length !== 10){
+    return {
+      biznoName:"",
+      raw:null,
+      error:true,
+      message:"Invalid business number"
+    };
+  }
 
+  /*
+    1차: POST x-www-form-urlencoded
+  */
   try{
-    const r = await fetch(BIZNO_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
+    const form = new URLSearchParams();
+    form.append("key", BIZNO_KEY);
+    form.append("gb", "2");
+    form.append("q", cleanNo);
+
+    const res = await fetch(BIZNO_URL, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8",
+        "Accept":"application/json,text/plain,*/*"
       },
-      body: JSON.stringify(payload)
+      body:form.toString()
     });
 
-    if(!r.ok) throw new Error("BIZNO JSON HTTP " + r.status);
+    const text = await res.text();
 
-    const data = await r.json();
+    console.log("BIZNO RAW POST:", cleanNo, text);
+
+    if(!res.ok){
+      throw new Error("BIZNO POST HTTP " + res.status + " / " + text.slice(0,120));
+    }
+
+    let data;
+
+    try{
+      data = JSON.parse(text);
+    }catch(e){
+      /*
+        JSON이 아니면 오류로 처리
+      */
+      return {
+        biznoName:"",
+        raw:text,
+        error:true,
+        message:"POST response is not JSON"
+      };
+    }
+
+    const name = extractBiznoName(data);
 
     return {
-      biznoName: extractBiznoName(data),
-      raw: data,
-      error: false
+      biznoName:name || "",
+      raw:data,
+      error:false
     };
 
-  }catch(jsonErr){
+  }catch(postErr){
     /*
-      일부 API는 form 방식만 받을 수 있으므로 fallback
+      2차: GET fallback
     */
     try{
-      const form = new URLSearchParams();
-      form.append("key", BIZNO_KEY);
-      form.append("gb", "2");
-      form.append("q", cleanNo);
+      const url =
+        BIZNO_URL +
+        "?key=" + encodeURIComponent(BIZNO_KEY) +
+        "&gb=2" +
+        "&q=" + encodeURIComponent(cleanNo);
 
-      const r2 = await fetch(BIZNO_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "Accept": "application/json"
-        },
-        body: form.toString()
+      const res2 = await fetch(url, {
+        method:"GET",
+        headers:{
+          "Accept":"application/json,text/plain,*/*"
+        }
       });
 
-      if(!r2.ok) throw new Error("BIZNO FORM HTTP " + r2.status);
+      const text2 = await res2.text();
 
-      const data2 = await r2.json();
+      console.log("BIZNO RAW GET:", cleanNo, text2);
+
+      if(!res2.ok){
+        throw new Error("BIZNO GET HTTP " + res2.status + " / " + text2.slice(0,120));
+      }
+
+      let data2;
+
+      try{
+        data2 = JSON.parse(text2);
+      }catch(e){
+        return {
+          biznoName:"",
+          raw:text2,
+          error:true,
+          message:"GET response is not JSON"
+        };
+      }
+
+      const name2 = extractBiznoName(data2);
 
       return {
-        biznoName: extractBiznoName(data2),
-        raw: data2,
-        error: false
+        biznoName:name2 || "",
+        raw:data2,
+        error:false
       };
 
-    }catch(formErr){
+    }catch(getErr){
       return {
-        biznoName: "",
-        raw: null,
-        error: true,
-        message: formErr.message || jsonErr.message
+        biznoName:"",
+        raw:null,
+        error:true,
+        message:getErr.message || postErr.message
       };
     }
   }
@@ -630,9 +805,11 @@ async function startCheck(){
 
         try{
           const d = await ntsQuery(batch);
+
           (d.data || []).forEach(function(it){
             nmap[it.b_no] = it;
           });
+
         }catch(e){
           batch.forEach(function(n){
             nmap[n] = {__err:true};
@@ -686,6 +863,9 @@ async function startCheck(){
             nameCheck: ""
           };
 
+          /*
+            TAX1/TAX2 중 계속사업자가 있으면 그 번호 우선 사용
+          */
           if(st === "계속사업자") break;
         }
 
@@ -729,14 +909,17 @@ async function startCheck(){
             if(bz.error){
               res.biznoName = "";
               res.nameCheck = "BIZNO 오류";
+              res.biznoError = bz.message || "";
             }else{
               res.biznoName = bz.biznoName || "";
               res.nameCheck = compareName(j.name, res.biznoName);
+              res.biznoRaw = bz.raw;
             }
 
           }catch(e){
             res.biznoName = "";
             res.nameCheck = "BIZNO 오류";
+            res.biznoError = e.message;
           }
 
           results[j.idx] = res;
@@ -744,6 +927,7 @@ async function startCheck(){
         function(done, total){
           setProgress(done, total, "Bizno");
           document.getElementById("doneCount").textContent = rows.length;
+
           if(done % 3 === 0 || done === total){
             renderTable();
           }
@@ -812,7 +996,8 @@ function dlExcel(){
       "과세유형": res.taxType || "—",
       "폐업일": res.endDt || "—",
       "비즈노 등록명": res.biznoName || "—",
-      "명칭 비교": res.nameCheck || "—"
+      "명칭 비교": res.nameCheck || "—",
+      "Bizno 오류메시지": res.biznoError || ""
     };
   });
 
@@ -828,7 +1013,8 @@ function dlExcel(){
     {wch:28},
     {wch:12},
     {wch:32},
-    {wch:14}
+    {wch:14},
+    {wch:35}
   ];
 
   const wb = XLSX.utils.book_new();
@@ -885,7 +1071,7 @@ function taxTag(v){
   const ok = isV(v);
 
   return '<span class="tt ' + (ok ? "tok" : "tbad") + '">' +
-    (ok ? fmt(cl(v)) : v) +
+    (ok ? fmt(cl(v)) : escapeHtml(v)) +
     (ok ? "" : " ⚠") +
     '</span>';
 }
@@ -944,15 +1130,6 @@ function renderTable(){
         '<td><span class="tt ' + nameCheckClass(nameCheck) + '">' + escapeHtml(nameCheck) + '</span></td>' +
       '</tr>';
   }).join("");
-}
-
-function escapeHtml(v){
-  return String(v || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }
 
 /* =========================
