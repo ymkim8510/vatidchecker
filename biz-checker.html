@@ -24,6 +24,23 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .hdr h1{font-size:21px;font-weight:800;color:#eaf4ff;letter-spacing:-.5px;}
 .hdr p{font-size:12px;color:var(--tx3);margin-top:4px;}
 .hdr-r{font-size:12px;color:var(--tx3);text-align:right;line-height:1.8;}
+
+/* 제한 안내 배너 */
+.notice{
+  background:#0f1a2e;border:1px solid #1e3a5f;border-radius:10px;
+  padding:12px 18px;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.notice-icon{font-size:18px;flex-shrink:0;}
+.notice-text{font-size:12px;color:var(--tx2);line-height:1.7;}
+.notice-text strong{color:var(--am);font-weight:700;}
+.notice-count{
+  margin-left:auto;background:var(--sur2);border:1px solid var(--bdr2);
+  border-radius:8px;padding:6px 14px;font-size:12px;color:var(--tx2);
+  white-space:nowrap;
+}
+.notice-count span{color:var(--am);font-weight:700;}
+
 .upbox{background:var(--sur);border:2px dashed var(--bdr2);border-radius:12px;padding:28px 24px;margin-bottom:12px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
 .upbox-icon{font-size:36px;flex-shrink:0;}
 .upbox-text h3{font-size:15px;font-weight:700;color:var(--tx2);margin-bottom:4px;}
@@ -100,11 +117,21 @@ td{padding:10px 16px;vertical-align:middle;}
 <div class="hdr">
   <div>
     <h1>🏥 사업자번호 일괄 조회</h1>
-    <p>국세청 API · 상태조회 → Bizno 사업자번호로 상호명 조회 → 결과 다운로드</p>
+    <p>국세청 API · 상태조회 → Bizno 상호명 확인 → 결과 다운로드</p>
   </div>
   <div class="hdr-r">
     <span id="doneCount">0</span>/<span id="totalCount">0</span> 완료&nbsp;&nbsp;마지막: <span id="lastTime">—</span>
   </div>
+</div>
+
+<!-- Bizno 제한 안내 배너 -->
+<div class="notice">
+  <div class="notice-icon">⚠️</div>
+  <div class="notice-text">
+    <strong>Bizno API 일일 조회 제한: 200건</strong><br>
+    계속영업 사업자에 한해 Bizno 상호명을 조회합니다. 하루 200건 초과 시 당일 Bizno 조회가 중단될 수 있습니다.
+  </div>
+  <div class="notice-count">오늘 Bizno 조회: <span id="biznoTodayCount">0</span> / 200건</div>
 </div>
 
 <div class="upbox">
@@ -162,7 +189,7 @@ td{padding:10px 16px;vertical-align:middle;}
       <tr>
         <th>#</th><th>업체명</th><th>TAX 1</th><th>TAX 2</th>
         <th>상태</th><th>사업자번호</th><th>과세유형</th><th>폐업일</th>
-        <th>비즈노 등록명</th><th>명칭 비교</th>
+        <th>비즈노 등록명</th><th>사업자 확인</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -175,9 +202,21 @@ td{padding:10px 16px;vertical-align:middle;}
 const NTS_KEY="kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
 const NTS_URL=`https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
 const BIZNO_KEY="L0uYH0t4BxapEcKm20SZlTBoIwdN";
+const BIZNO_LIMIT=200;
 const BIZNO_CONCURRENCY=3;
 
 let rows=[],results={},curF="ALL",running=false,rawBody=[];
+
+// 오늘 날짜 기준 Bizno 조회 카운트 (localStorage 사용)
+function getTodayKey(){ return "bizno_count_"+new Date().toISOString().slice(0,10); }
+function getBiznoCount(){ return parseInt(localStorage.getItem(getTodayKey())||"0",10); }
+function addBiznoCount(n){
+  const key=getTodayKey();
+  const cur=getBiznoCount();
+  localStorage.setItem(key,cur+n);
+  document.getElementById("biznoTodayCount").textContent=cur+n;
+}
+function updateBiznoDisplay(){ document.getElementById("biznoTodayCount").textContent=getBiznoCount(); }
 
 const isV=n=>/^\d{10}$/.test((n||"").replace(/\D/g,""));
 const cl=n=>(n||"").replace(/\D/g,"");
@@ -196,27 +235,16 @@ const SC={
 
 function escHtml(v){return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
-function normName(s){
-  return String(s||"").toLowerCase()
-    .replace(/\s/g,"")
-    .replace(/\(주\)|㈜|주식회사|유한회사|의료법인|재단법인|사단법인|학교법인/g,"")
-    .replace(/[^\w가-힣]/g,"");
-}
-
-function compareName(a,b){
-  if(!b)return "확인불가";
-  const na=normName(a),nb=normName(b);
-  if(!na||!nb)return "확인불가";
-  if(na===nb)return "일치";
-  if(na.includes(nb)||nb.includes(na))return "유사";
-  return "불일치";
-}
-
-function nameCheckClass(v){
-  if(v==="일치")return "tok2";
-  if(v==="유사"||v==="조회 제외")return "tok";
-  if(v==="확인불가"||v==="대기")return "twarn";
-  return "tbad";
+/* ── 사업자 확인 결과 스타일 ── */
+function verifyStyle(v){
+  if(v==="✅ 사업자 확인") return "tok2";
+  if(v==="❌ 번호 불일치") return "tbad";
+  if(v==="— 조회 제외")   return "tok";
+  if(v==="⚠️ 한도 초과")  return "tbad";
+  if(v==="❓ 확인불가")   return "twarn";
+  if(v==="⏳ 대기")       return "twarn";
+  if(v==="🔴 오류")       return "tbad";
+  return "twarn";
 }
 
 function setProgress(done,total,label){
@@ -291,74 +319,37 @@ async function ntsQuery(nos){
   return r.json();
 }
 
-/* ── Bizno API: 사업자번호로 XML 조회 후 파싱 ── */
+/* ── Bizno API: 사업자번호로 XML 조회 ── */
 async function biznoLookup(bizNo){
   const cleanNo=cl(bizNo);
-  if(!cleanNo||cleanNo.length!==10)return{biznoName:"",error:true,message:"invalid"};
+  if(!cleanNo||cleanNo.length!==10)return{biznoName:"",biznoBno:"",error:true};
 
-  // gb=1: 사업자번호로 조회
-  // gb=2: 상호명으로 조회
-  // type=xml 명시
   const url=`https://bizno.net/api/fapi?key=${encodeURIComponent(BIZNO_KEY)}&gb=1&q=${cleanNo}&type=xml`;
-
   try{
     const res=await fetch(url,{method:"GET"});
     const text=await res.text();
-    console.log("BIZNO ["+cleanNo+"]:", text.slice(0,500));
 
     const parser=new DOMParser();
     const xml=parser.parseFromString(text,"text/xml");
 
-    // totalCount 확인
-    const tcEl=xml.querySelector("totalCount,TotalCount,total_count");
+    const tcEl=xml.querySelector("totalCount,TotalCount");
     const tc=tcEl?parseInt(tcEl.textContent.trim(),10):0;
+    if(tc===0)return{biznoName:"",biznoBno:"",error:false,notFound:true};
 
-    if(tc===0){
-      // gb=1 실패시 gb=2(상호명 검색)로 재시도는 하지 않음
-      // 대신 콘솔에 전체 XML 출력해서 구조 파악
-      console.log("BIZNO totalCount=0, full XML:", text);
-      return{biznoName:"",error:false,message:"not found"};
-    }
-
-    // item 안의 모든 태그를 탐색해서 상호명 찾기
     const item=xml.querySelector("item");
-    if(!item)return{biznoName:"",error:false,message:"no item"};
+    if(!item)return{biznoName:"",biznoBno:"",error:false,notFound:true};
 
-    // 콘솔에 item 전체 태그 출력 (어떤 필드명인지 확인용)
-    const tagMap={};
-    item.querySelectorAll("*").forEach(el=>{
-      if(el.textContent.trim()&&!el.children.length){
-        tagMap[el.tagName]=el.textContent.trim();
-      }
-    });
-    console.log("BIZNO item fields ["+cleanNo+"]:", JSON.stringify(tagMap));
+    // bno 필드 (Bizno가 반환하는 사업자번호)
+    const bnoEl=item.querySelector("bno,BNO,b_no");
+    const biznoBno=bnoEl?cl(bnoEl.textContent.trim()):"";
 
-    // 상호명 필드 순서대로 탐색
-    const nameFields=[
-      "b_nm","bNm","bizName","companyName","company_name","company",
-      "corp_nm","corpName","name","entrnm","korentrnm",
-      "상호명","상호","업체명","회사명","법인명"
-    ];
-    for(const f of nameFields){
-      const el=item.querySelector(f);
-      if(el&&el.textContent.trim()){
-        return{biznoName:el.textContent.trim(),error:false};
-      }
-    }
+    // 상호명: company 필드 (콘솔 확인 결과)
+    const companyEl=item.querySelector("company,Company,b_nm,bizName,companyName,name");
+    const biznoName=companyEl?companyEl.textContent.trim():"";
 
-    // 태그맵에서 이름처럼 보이는 값 자동 추출
-    for(const[tag,val]of Object.entries(tagMap)){
-      const tl=tag.toLowerCase();
-      if(tl.includes("nm")||tl.includes("name")||tl.includes("상호")||tl.includes("업체")){
-        return{biznoName:val,error:false};
-      }
-    }
-
-    return{biznoName:"",error:false,message:"name field not found in: "+Object.keys(tagMap).join(",")};
-
+    return{biznoName,biznoBno,error:false};
   }catch(e){
-    console.error("BIZNO error ["+cleanNo+"]:",e.message);
-    return{biznoName:"",error:true,message:e.message};
+    return{biznoName:"",biznoBno:"",error:true,message:e.message};
   }
 }
 
@@ -415,7 +406,7 @@ async function startCheck(){
     for(const j of jobs){
       let finalRes=null;
       if(j.noV){
-        finalRes={status:"TAX_ERR",biznoName:"",nameCheck:"조회 제외"};
+        finalRes={status:"TAX_ERR",biznoName:"",verify:"— 조회 제외"};
       }else{
         let res=null;
         for(const no of j.cands){
@@ -424,47 +415,93 @@ async function startCheck(){
           if(it.__err){res={status:"API_ERR",no:fmt(no)};continue;}
           const st=it.b_stt||"",ed=it.end_dt||"",tp=it.tax_type||"";
           if(!st&&tp.includes("등록되지 않은")){res={status:"NOT_FOUND",no:fmt(no)};continue;}
-          res={status:st||"NOT_FOUND",no:fmt(no),endDt:ed,taxType:tp,biznoName:"",nameCheck:""};
+          res={status:st||"NOT_FOUND",no:fmt(no),endDt:ed,taxType:tp};
           if(st==="계속사업자")break;
         }
         finalRes=res||{status:"NOT_FOUND"};
         finalRes.biznoName="";
-        finalRes.nameCheck=finalRes.status==="계속사업자"?"대기":"조회 제외";
+        finalRes.verify=finalRes.status==="계속사업자"?"⏳ 대기":"— 조회 제외";
       }
       results[j.idx]=finalRes;
     }
     updateCounts();renderTable();
 
-    /* 4단계: 계속사업자만 Bizno 조회 */
+    /* 4단계: 계속사업자만 Bizno 조회 (일일 200건 제한 적용) */
     const biznoTargets=jobs.filter(j=>{
       const res=results[j.idx];
       return res&&res.status==="계속사업자"&&res.no;
     });
 
     if(biznoTargets.length>0){
-      setProgress(0,biznoTargets.length,"Bizno");
-      await runConcurrent(biznoTargets,BIZNO_CONCURRENCY,
-        async function(j){
-          const res=results[j.idx];
-          await sleep(300); // rate limit 방지
-          try{
-            const bz=await biznoLookup(res.no);
-            if(bz.error){
-              res.biznoName="";res.nameCheck="BIZNO 오류";res.biznoError=bz.message||"";
-            }else{
-              res.biznoName=bz.biznoName||"";
-              res.nameCheck=res.biznoName?compareName(j.name,res.biznoName):"확인불가";
-            }
-          }catch(e){
-            res.biznoName="";res.nameCheck="BIZNO 오류";res.biznoError=e.message;
-          }
-          results[j.idx]=res;
-        },
-        function(done,total){
-          setProgress(done,total,"Bizno");
-          if(done%2===0||done===total)renderTable();
+      const todayUsed=getBiznoCount();
+      const remaining=Math.max(0,BIZNO_LIMIT-todayUsed);
+
+      if(remaining===0){
+        // 한도 초과: 모두 한도초과로 표시
+        biznoTargets.forEach(j=>{
+          results[j.idx].biznoName="";
+          results[j.idx].verify="⚠️ 한도 초과";
+        });
+        toast("⚠️ Bizno 일일 200건 한도 초과 — 내일 다시 시도하세요");
+      }else{
+        // remaining 개수만큼만 조회
+        const toQuery=biznoTargets.slice(0,remaining);
+        const skipped=biznoTargets.slice(remaining);
+
+        // 한도 초과분 표시
+        skipped.forEach(j=>{
+          results[j.idx].biznoName="";
+          results[j.idx].verify="⚠️ 한도 초과";
+        });
+
+        if(remaining<biznoTargets.length){
+          toast("⚠️ 오늘 남은 Bizno 조회: "+remaining+"건만 진행");
         }
-      );
+
+        setProgress(0,toQuery.length,"Bizno");
+        let biznoQueried=0;
+
+        await runConcurrent(toQuery,BIZNO_CONCURRENCY,
+          async function(j){
+            const res=results[j.idx];
+            await sleep(300);
+            try{
+              const bz=await biznoLookup(res.no);
+              biznoQueried++;
+
+              if(bz.error){
+                res.biznoName="";res.verify="🔴 오류";
+              }else if(bz.notFound){
+                res.biznoName="";res.verify="❓ 확인불가";
+              }else{
+                res.biznoName=bz.biznoName||"";
+                // 핵심 로직: Bizno가 반환한 bno == 조회한 번호면 "사업자 확인"
+                const queriedNo=cl(res.no);
+                const returnedNo=cl(bz.biznoBno);
+                if(returnedNo&&returnedNo===queriedNo){
+                  res.verify="✅ 사업자 확인";
+                }else if(returnedNo&&returnedNo!==queriedNo){
+                  res.verify="❌ 번호 불일치";
+                }else{
+                  // bno 없이 상호명만 있는 경우
+                  res.verify=res.biznoName?"✅ 사업자 확인":"❓ 확인불가";
+                }
+              }
+            }catch(e){
+              res.biznoName="";res.verify="🔴 오류";
+            }
+            results[j.idx]=res;
+          },
+          function(done,total){
+            setProgress(done,total,"Bizno");
+            addBiznoCount(0); // 카운트 표시 갱신
+            if(done%2===0||done===total)renderTable();
+          }
+        );
+
+        // 실제 조회 건수 카운트에 반영
+        addBiznoCount(biznoQueried);
+      }
     }
 
     /* 5단계: 완료 */
@@ -496,16 +533,15 @@ function dlExcel(){
     return{"순번":i+1,"업체명":r.name,"TAX1":r.tax1,"TAX2":r.tax2,
       "상태":SL[res.status]||"—","사업자번호":res.no||"—",
       "과세유형":res.taxType||"—","폐업일":res.endDt||"—",
-      "비즈노 등록명":res.biznoName||"—","명칭 비교":res.nameCheck||"—",
-      "Bizno 오류":res.biznoError||""};
+      "비즈노 등록명":res.biznoName||"—","사업자 확인":res.verify||"—"};
   });
   const ws=XLSX.utils.json_to_sheet(data);
-  ws["!cols"]=[{wch:5},{wch:28},{wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:12},{wch:32},{wch:14},{wch:35}];
+  ws["!cols"]=[{wch:5},{wch:28},{wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:12},{wch:32},{wch:16}];
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"결과");
   const n=new Date();
   const ts=n.getFullYear()+String(n.getMonth()+1).padStart(2,"0")+String(n.getDate()).padStart(2,"0")+"_"+String(n.getHours()).padStart(2,"0")+String(n.getMinutes()).padStart(2,"0");
-  XLSX.writeFile(wb,"사업자조회_Bizno_"+ts+".xlsx");
+  XLSX.writeFile(wb,"사업자조회_"+ts+".xlsx");
   toast("📥 다운로드 완료");
 }
 
@@ -529,6 +565,7 @@ function taxTag(v){
   return'<span class="tt '+(ok?"tok":"tbad")+'">'+(ok?fmt(cl(v)):escHtml(v))+(ok?"":" ⚠")+'</span>';
 }
 function bdg(s){const c=SC[s]||SC.NOT_FOUND;return'<span class="badge '+c.cls+'">'+c.icon+' '+c.lab+'</span>';}
+
 function renderTable(){
   const tb=document.getElementById("tbody");
   if(rows.length===0){tb.innerHTML='<tr><td colspan="10" class="ec"><div class="ei">📂</div>엑셀 파일을 선택해 주세요</td></tr>';return;}
@@ -539,7 +576,7 @@ function renderTable(){
     const st=res?res.status:(running?"PENDING":null);
     const tp=res&&res.taxType&&!res.taxType.includes("등록되지 않은")?res.taxType:"—";
     const bizName=res&&res.biznoName?res.biznoName:"—";
-    const nc=res&&res.nameCheck?res.nameCheck:"—";
+    const verify=res&&res.verify?res.verify:"—";
     return'<tr>'+
       '<td class="num">'+(i+1)+'</td>'+
       '<td class="cn">'+escHtml(r.name)+'</td>'+
@@ -550,16 +587,20 @@ function renderTable(){
       '<td><span style="font-size:12px;color:var(--tx2)">'+escHtml(tp)+'</span></td>'+
       '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--rd)">'+(res&&res.endDt?res.endDt:"—")+'</span></td>'+
       '<td><span style="font-size:12px;color:var(--tx2)">'+escHtml(bizName)+'</span></td>'+
-      '<td><span class="tt '+nameCheckClass(nc)+'">'+escHtml(nc)+'</span></td>'+
+      '<td><span class="tt '+verifyStyle(verify)+'">'+escHtml(verify)+'</span></td>'+
     '</tr>';
   }).join("");
 }
+
 let tt;
 function toast(msg){
   const el=document.getElementById("toast");
   el.textContent=msg;el.classList.add("on");
   clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("on"),3500);
 }
+
+// 초기화
+updateBiznoDisplay();
 renderTable();
 </script>
 </body>
