@@ -6,7 +6,6 @@
 <title>사업자번호 일괄 조회</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --bg:#070c18;--sur:#0d1525;--sur2:#121e32;--bdr:#1a2a40;--bdr2:#1f3050;
@@ -25,83 +24,38 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .hdr h1{font-size:21px;font-weight:800;color:#eaf4ff;letter-spacing:-.5px;}
 .hdr p{font-size:12px;color:var(--tx3);margin-top:4px;}
 .hdr-r{font-size:12px;color:var(--tx3);text-align:right;line-height:1.8;}
-
-.upbox{
-  background:var(--sur);border:2px dashed var(--bdr2);border-radius:12px;
-  padding:28px 24px;margin-bottom:12px;
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-}
+.upbox{background:var(--sur);border:2px dashed var(--bdr2);border-radius:12px;padding:28px 24px;margin-bottom:12px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
 .upbox-icon{font-size:36px;flex-shrink:0;}
 .upbox-text h3{font-size:15px;font-weight:700;color:var(--tx2);margin-bottom:4px;}
 .upbox-text p{font-size:12px;color:var(--tx3);}
-#fi{
-  display:block;
-  margin-top:10px;
-  font-family:inherit;
-  font-size:13px;
-  color:var(--tx2);
-  cursor:pointer;
-}
-#fi::file-selector-button{
-  background:var(--ac);color:#fff;border:none;border-radius:6px;
-  padding:8px 18px;font-family:inherit;font-size:13px;font-weight:700;
-  cursor:pointer;margin-right:12px;transition:filter .2s;
-}
+#fi{display:block;margin-top:10px;font-family:inherit;font-size:13px;color:var(--tx2);cursor:pointer;}
+#fi::file-selector-button{background:var(--ac);color:#fff;border:none;border-radius:6px;padding:8px 18px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin-right:12px;transition:filter .2s;}
 #fi::file-selector-button:hover{filter:brightness(1.15);}
-
-.upinfo{
-  padding:10px 16px;border-radius:8px;border:1px solid var(--bdr2);
-  background:var(--sur2);font-size:13px;color:var(--tx2);
-  display:none;margin-bottom:20px;
-}
+.upinfo{padding:10px 16px;border-radius:8px;border:1px solid var(--bdr2);background:var(--sur2);font-size:13px;color:var(--tx2);display:none;margin-bottom:20px;}
 .upinfo.on{display:block;}
-
-.colmap{
-  background:var(--sur);border:1px solid var(--bdr);border-radius:12px;
-  padding:18px 20px;display:none;margin-bottom:20px;
-}
+.colmap{background:var(--sur);border:1px solid var(--bdr);border-radius:12px;padding:18px 20px;display:none;margin-bottom:20px;}
 .colmap.on{display:block;}
 .colmap h3{font-size:13px;font-weight:700;color:var(--tx2);margin-bottom:14px;}
 .crow{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
 .ci{display:flex;flex-direction:column;gap:5px;}
 .ci label{font-size:11px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
-.ci select{
-  background:var(--sur2);border:1px solid var(--bdr2);color:var(--tx);
-  border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;
-  cursor:pointer;min-width:170px;
-}
+.ci select{background:var(--sur2);border:1px solid var(--bdr2);color:var(--tx);border-radius:6px;padding:8px 12px;font-family:inherit;font-size:13px;cursor:pointer;min-width:170px;}
 .ci select:focus{outline:none;border-color:var(--ac);}
-
 .tb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-.btn{
-  border:none;border-radius:8px;padding:10px 22px;font-family:inherit;
-  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;
-}
+.btn{border:none;border-radius:8px;padding:10px 22px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .btn-b{background:linear-gradient(135deg,#1458c8,#2878f0);color:#fff;box-shadow:0 2px 16px #2878f030;}
 .btn-g{background:linear-gradient(135deg,#0a6640,#18c472);color:#fff;box-shadow:0 2px 16px #18c47230;display:none;}
 .bsm{padding:8px 16px;font-size:13px;}
 .btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
 .btn:disabled{background:var(--sur2);color:var(--tx3);cursor:not-allowed;box-shadow:none;transform:none;}
-
-.pg-w{
-  flex:1;min-width:100px;height:5px;background:var(--sur2);
-  border-radius:99px;overflow:hidden;display:none;
-}
+.pg-w{flex:1;min-width:100px;height:5px;background:var(--sur2);border-radius:99px;overflow:hidden;display:none;}
 .pg-w.on{display:block;}
-.pg-b{
-  height:100%;background:linear-gradient(90deg,#1458c8,#2878f0);
-  border-radius:99px;width:0%;transition:width .3s;
-}
+.pg-b{height:100%;background:linear-gradient(90deg,#1458c8,#2878f0);border-radius:99px;width:0%;transition:width .3s;}
 .pg-l{font-size:12px;color:var(--tx2);display:none;white-space:nowrap;}
 .pg-l.on{display:block;}
-
 .pills{display:none;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .pills.on{display:flex;}
-.pill{
-  border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;
-  cursor:pointer;border:1.5px solid var(--bdr2);background:var(--sur);
-  color:var(--tx3);transition:all .15s;
-}
+.pill{border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--bdr2);background:var(--sur);color:var(--tx3);transition:all .15s;}
 .pill:hover{border-color:var(--ac);color:var(--ac);}
 .pill.act{border-color:var(--ac);background:#071428;color:var(--ac);}
 .pill[data-s="계속사업자"].act{border-color:var(--gr);background:var(--gr-bg);color:var(--gr);}
@@ -110,32 +64,21 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--tx);
 .pill[data-s="TAX_ERR"].act{border-color:var(--pu);background:var(--pu-bg);color:var(--pu);}
 .pill[data-s="NOT_FOUND"].act{border-color:var(--sl);background:var(--sl-bg);color:var(--sl);}
 .pill[data-s="API_ERR"].act{border-color:var(--or);background:var(--or-bg);color:var(--or);}
-
 .tbl-w{background:var(--sur);border-radius:14px;border:1px solid var(--bdr);overflow:auto;}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:1120px;}
 thead tr{background:var(--bg);}
-th{
-  padding:11px 16px;font-size:11px;font-weight:600;color:var(--tx3);
-  text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;
-}
+th{padding:11px 16px;font-size:11px;font-weight:600;color:var(--tx3);text-align:left;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;}
 tbody tr{border-top:1px solid var(--bdr);transition:background .1s;}
 tbody tr:hover{background:var(--sur2);}
 td{padding:10px 16px;vertical-align:middle;}
 .num{color:var(--tx3);font-size:11px;}
 .cn{font-weight:700;color:#cce4ff;}
-.tt{
-  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;
-  border-radius:5px;padding:2px 8px;border:1px solid;white-space:nowrap;
-}
+.tt{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;border-radius:5px;padding:2px 8px;border:1px solid;white-space:nowrap;}
 .tok{background:#06121e;color:#7dd3fc;border-color:#1a3a56;}
 .tbad{background:#180608;color:#f87171;border-color:#7f1d1d;}
 .tok2{background:var(--gr-bg);color:var(--gr);border-color:var(--gr-bd);}
 .twarn{background:var(--am-bg);color:var(--am);border-color:var(--am-bd);}
-
-.badge{
-  display:inline-flex;align-items:center;gap:5px;border-radius:6px;
-  padding:3px 11px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap;
-}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:6px;padding:3px 11px;font-size:12px;font-weight:700;border:1px solid transparent;white-space:nowrap;}
 .ba{background:var(--gr-bg);color:var(--gr);border-color:var(--gr-bd);}
 .bc{background:var(--rd-bg);color:var(--rd);border-color:var(--rd-bd);}
 .bs{background:var(--am-bg);color:var(--am);border-color:var(--am-bd);}
@@ -144,30 +87,20 @@ td{padding:10px 16px;vertical-align:middle;}
 .bo{background:var(--or-bg);color:var(--or);border-color:var(--or-bd);}
 .bp{background:var(--sur2);color:var(--tx3);border-color:var(--bdr2);animation:pu 1.4s infinite;}
 @keyframes pu{0%,100%{opacity:.5}50%{opacity:1}}
-
 .ec{padding:52px;text-align:center;color:var(--tx3);}
 .ei{font-size:32px;margin-bottom:10px;}
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  background:#1a2a3a;border:1px solid var(--bdr2);border-radius:10px;
-  padding:12px 20px;font-size:13px;color:var(--tx2);
-  box-shadow:0 4px 24px #00000060;display:none;z-index:99;white-space:nowrap;
-}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a2a3a;border:1px solid var(--bdr2);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--tx2);box-shadow:0 4px 24px #00000060;display:none;z-index:99;white-space:nowrap;}
 .toast.on{display:block;animation:fi .3s;}
-@keyframes fi{
-  from{opacity:0;transform:translateX(-50%) translateY(8px)}
-  to{opacity:1;transform:translateX(-50%) translateY(0)}
-}
+@keyframes fi{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
-
 <body>
 <div class="w">
 
 <div class="hdr">
   <div>
     <h1>🏥 사업자번호 일괄 조회</h1>
-    <p>국세청 공공데이터 API · 엑셀 업로드 → 상태 조회 → Bizno 등록명 확인 → 결과 다운로드</p>
+    <p>국세청 API · 상태조회 → Bizno 사업자번호로 상호명 조회 → 결과 다운로드</p>
   </div>
   <div class="hdr-r">
     <span id="doneCount">0</span>/<span id="totalCount">0</span> 완료&nbsp;&nbsp;마지막: <span id="lastTime">—</span>
@@ -182,7 +115,6 @@ td{padding:10px 16px;vertical-align:middle;}
     <input type="file" id="fi" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])">
   </div>
 </div>
-
 <div class="upinfo" id="upinfo"></div>
 
 <div class="colmap" id="colmap">
@@ -228,927 +160,406 @@ td{padding:10px 16px;vertical-align:middle;}
   <table>
     <thead>
       <tr>
-        <th>#</th>
-        <th>업체명</th>
-        <th>TAX 1</th>
-        <th>TAX 2</th>
-        <th>상태</th>
-        <th>사업자번호</th>
-        <th>과세유형</th>
-        <th>폐업일</th>
-        <th>비즈노 등록명</th>
-        <th>명칭 비교</th>
+        <th>#</th><th>업체명</th><th>TAX 1</th><th>TAX 2</th>
+        <th>상태</th><th>사업자번호</th><th>과세유형</th><th>폐업일</th>
+        <th>비즈노 등록명</th><th>명칭 비교</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
-
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-/* =========================
-   API 설정
-========================= */
-const NTS_KEY = "kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
-const NTS_URL = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
+const NTS_KEY="kLDaua97pDtLAJ7inNtKtbF4YGXZoF24vb6kFNYNxETfSatkg6v%2F3u7StO7abDOjahtiwaDLjyMK0QmyQDU3yw%3D%3D";
+const NTS_URL=`https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${NTS_KEY}`;
+const BIZNO_KEY="L0uYH0t4BxapEcKm20SZlTBoIwdN";
+const BIZNO_CONCURRENCY=3;
 
-const BIZNO_URL = "https://bizno.net/api/fapi";
-const BIZNO_KEY = "L0uYH0t4BxapEcKm20SZlTBoIwdN";
+let rows=[],results={},curF="ALL",running=false,rawBody=[];
 
-/*
-  병렬 처리 개수
-  너무 높이면 API 제한/브라우저 제한/CORS 에러 가능성이 있습니다.
-  6~8 정도를 권장합니다.
-*/
-const BIZNO_CONCURRENCY = 6;
+const isV=n=>/^\d{10}$/.test((n||"").replace(/\D/g,""));
+const cl=n=>(n||"").replace(/\D/g,"");
+const fmt=n=>{const d=cl(n);return d.length===10?`${d.slice(0,3)}-${d.slice(3,5)}-${d.slice(5)}`:n;};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-/* =========================
-   전역 변수
-========================= */
-let rows = [];
-let results = {};
-let curF = "ALL";
-let running = false;
-let rawBody = [];
-
-/* =========================
-   공통 유틸
-========================= */
-const isV = n => /^\d{10}$/.test((n || "").replace(/\D/g, ""));
-const cl = n => (n || "").replace(/\D/g, "");
-const fmt = n => {
-  const d = cl(n);
-  return d.length === 10 ? `${d.slice(0,3)}-${d.slice(3,5)}-${d.slice(5)}` : n;
+const SC={
+  "계속사업자":{cls:"ba",icon:"✅",lab:"계속영업"},
+  "휴업자":{cls:"bs",icon:"⏸",lab:"휴업중"},
+  "폐업자":{cls:"bc",icon:"❌",lab:"폐업"},
+  TAX_ERR:{cls:"bt",icon:"⚠️",lab:"TAX ERROR"},
+  NOT_FOUND:{cls:"bn",icon:"❓",lab:"미등록"},
+  API_ERR:{cls:"bo",icon:"🔴",lab:"API 오류"},
+  PENDING:{cls:"bp",icon:"⏳",lab:"조회 중…"}
 };
 
-const SC = {
-  "계속사업자": {cls:"ba", icon:"✅", lab:"계속영업"},
-  "휴업자": {cls:"bs", icon:"⏸", lab:"휴업중"},
-  "폐업자": {cls:"bc", icon:"❌", lab:"폐업"},
-  TAX_ERR: {cls:"bt", icon:"⚠️", lab:"TAX ERROR"},
-  NOT_FOUND: {cls:"bn", icon:"❓", lab:"미등록"},
-  API_ERR: {cls:"bo", icon:"🔴", lab:"API 오류"},
-  PENDING: {cls:"bp", icon:"⏳", lab:"조회 중…"}
-};
-
-function sleep(ms){
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function setProgress(done, total, label){
-  const pct = total ? Math.round(done / total * 100) : 0;
-  document.getElementById("pgb").style.width = pct + "%";
-  document.getElementById("pgl").textContent = label ? `${label} ${done}/${total}` : `${done}/${total}`;
-}
-
-function escapeHtml(v){
-  return String(v || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+function escHtml(v){return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
 function normName(s){
-  return String(s || "")
-    .toLowerCase()
-    .replace(/\s/g, "")
-    .replace(/\(주\)|㈜|주식회사|유한회사|의료법인|재단법인|사단법인|학교법인/g, "")
-    .replace(/[^\w가-힣]/g, "");
+  return String(s||"").toLowerCase()
+    .replace(/\s/g,"")
+    .replace(/\(주\)|㈜|주식회사|유한회사|의료법인|재단법인|사단법인|학교법인/g,"")
+    .replace(/[^\w가-힣]/g,"");
 }
 
-function compareName(inputName, registeredName){
-  if(!registeredName) return "확인불가";
-
-  const a = normName(inputName);
-  const b = normName(registeredName);
-
-  if(!a || !b) return "확인불가";
-  if(a === b) return "일치";
-  if(a.includes(b) || b.includes(a)) return "유사";
+function compareName(a,b){
+  if(!b)return "확인불가";
+  const na=normName(a),nb=normName(b);
+  if(!na||!nb)return "확인불가";
+  if(na===nb)return "일치";
+  if(na.includes(nb)||nb.includes(na))return "유사";
   return "불일치";
 }
 
 function nameCheckClass(v){
-  if(v === "일치") return "tok2";
-  if(v === "유사") return "tok";
-  if(v === "조회 제외") return "tok";
-  if(v === "확인불가") return "twarn";
-  if(v === "대기") return "twarn";
+  if(v==="일치")return "tok2";
+  if(v==="유사"||v==="조회 제외")return "tok";
+  if(v==="확인불가"||v==="대기")return "twarn";
   return "tbad";
 }
 
-/* =========================
-   Bizno 응답 파싱 강화
-========================= */
-function extractBiznoName(data){
-  if(!data) return "";
-
-  /*
-    문자열 JSON이 한 번 더 감싸져 있는 경우 대비
-  */
-  if(typeof data === "string"){
-    try{
-      data = JSON.parse(data);
-    }catch(e){
-      return "";
-    }
-  }
-
-  let list = [];
-
-  if(Array.isArray(data)){
-    list = data;
-  }else if(data && Array.isArray(data.data)){
-    list = data.data;
-  }else if(data && Array.isArray(data.items)){
-    list = data.items;
-  }else if(data && Array.isArray(data.list)){
-    list = data.list;
-  }else if(data && Array.isArray(data.result)){
-    list = data.result;
-  }else if(data && Array.isArray(data.rows)){
-    list = data.rows;
-  }else if(data && typeof data === "object"){
-    list = [data];
-  }
-
-  if(!list.length) return "";
-
-  const item = list[0];
-
-  /*
-    예상 가능한 상호명 필드명 최대한 포함
-  */
-  const directFields = [
-    "b_nm",
-    "bNm",
-    "bnm",
-    "bizName",
-    "bizname",
-    "businessName",
-    "business_name",
-    "company",
-    "companyName",
-    "company_name",
-    "corp_nm",
-    "corpName",
-    "corp_name",
-    "name",
-    "nm",
-    "entrnm",
-    "korentrnm",
-    "bnsnm",
-    "상호",
-    "상호명",
-    "회사명",
-    "업체명",
-    "법인명"
-  ];
-
-  for(const f of directFields){
-    if(item && item[f]){
-      return String(item[f]).trim();
-    }
-  }
-
-  /*
-    혹시 중첩 object 안에 있는 경우 재귀적으로 탐색
-  */
-  const found = findNameRecursive(item);
-  return found || "";
+function setProgress(done,total,label){
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById("pgb").style.width=pct+"%";
+  document.getElementById("pgl").textContent=(label?label+" ":"")+done+"/"+total;
 }
 
-function findNameRecursive(obj){
-  if(!obj || typeof obj !== "object") return "";
-
-  const preferredKeys = [
-    "b_nm",
-    "bizName",
-    "company",
-    "companyName",
-    "corp_nm",
-    "name",
-    "entrnm",
-    "상호명",
-    "상호",
-    "업체명",
-    "회사명"
-  ];
-
-  for(const k of preferredKeys){
-    if(obj[k] && typeof obj[k] !== "object"){
-      return String(obj[k]).trim();
-    }
-  }
-
-  for(const k in obj){
-    if(!Object.prototype.hasOwnProperty.call(obj, k)) continue;
-
-    const v = obj[k];
-
-    if(v && typeof v === "object"){
-      const nested = findNameRecursive(v);
-      if(nested) return nested;
-    }
-  }
-
-  return "";
-}
-
-/* =========================
-   파일 업로드 / 컬럼 매핑
-========================= */
+/* ── 파일 처리 ── */
 function handleFile(file){
-  if(!file) return;
-
+  if(!file)return;
   toast("📂 읽는 중...");
-
-  if(!window.XLSX){
-    toast("❌ XLSX 로딩 중... 잠시 후 다시 시도");
-    return;
-  }
-
+  if(!window.XLSX){toast("❌ XLSX 로딩 중... 잠시 후 다시 시도");return;}
   file.arrayBuffer().then(function(buf){
     try{
-      const wb = XLSX.read(new Uint8Array(buf), {type:"array"});
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const data = XLSX.utils.sheet_to_json(ws, {header:1, defval:""});
-
-      if(!data || data.length < 2){
-        toast("❌ 데이터가 없습니다");
-        return;
-      }
-
-      const hdrs = data[0].map(function(h){ return String(h).trim(); });
-
-      rawBody = data.slice(1).filter(function(r){
-        return r.some(function(c){ return String(c).trim(); });
-      });
-
-      ["sN","sT1","sT2"].forEach(function(id, i){
-        const sel = document.getElementById(id);
-        sel.innerHTML = `<option value="">${i === 2 ? "— 없음 —" : "— 선택 —"}</option>`;
-
-        hdrs.forEach(function(h, idx){
-          const op = document.createElement("option");
-          op.value = idx;
-          op.textContent = h || ("컬럼 " + (idx + 1));
-
-          const low = h.toLowerCase();
-
-          if(id === "sN" && (
-            low.includes("name") ||
-            low.includes("업체") ||
-            low.includes("상호") ||
-            low.includes("confirmed") ||
-            low.includes("customer")
-          )) op.selected = true;
-
-          if(id === "sT1" && (
-            low.includes("tax1") ||
-            low === "tax 1" ||
-            low === "tax_1" ||
-            low.includes("사업자1") ||
-            low.includes("tax id")
-          )) op.selected = true;
-
-          if(id === "sT2" && (
-            low.includes("tax2") ||
-            low === "tax 2" ||
-            low === "tax_2" ||
-            low.includes("사업자2")
-          )) op.selected = true;
-
+      const wb=XLSX.read(new Uint8Array(buf),{type:"array"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+      if(!data||data.length<2){toast("❌ 데이터가 없습니다");return;}
+      const hdrs=data[0].map(h=>String(h).trim());
+      rawBody=data.slice(1).filter(r=>r.some(c=>String(c).trim()));
+      ["sN","sT1","sT2"].forEach(function(id,i){
+        const sel=document.getElementById(id);
+        sel.innerHTML=`<option value="">${i===2?"— 없음 —":"— 선택 —"}</option>`;
+        hdrs.forEach(function(h,idx){
+          const op=document.createElement("option");
+          op.value=idx;op.textContent=h||("컬럼 "+(idx+1));
+          const low=h.toLowerCase();
+          if(id==="sN"&&(low.includes("name")||low.includes("업체")||low.includes("상호")||low.includes("confirmed")||low.includes("customer")))op.selected=true;
+          if(id==="sT1"&&(low.includes("tax1")||low==="tax 1"||low==="tax_1"||low.includes("사업자1")||low.includes("tax id")))op.selected=true;
+          if(id==="sT2"&&(low.includes("tax2")||low==="tax 2"||low==="tax_2"||low.includes("사업자2")))op.selected=true;
           sel.appendChild(op);
         });
       });
-
-      document.getElementById("upinfo").className = "upinfo on";
-      document.getElementById("upinfo").textContent =
-        "✅ " + file.name + " — " + rawBody.length + "행 로드 완료 | 컬럼: " + hdrs.join(", ");
-
+      document.getElementById("upinfo").className="upinfo on";
+      document.getElementById("upinfo").textContent="✅ "+file.name+" — "+rawBody.length+"행 로드 완료 | 컬럼: "+hdrs.join(", ");
       document.getElementById("colmap").classList.add("on");
-
-      toast("✅ " + rawBody.length + "개 행 로드 — 컬럼을 지정하세요");
-
-    }catch(err){
-      toast("❌ 파싱 오류: " + err.message);
-    }
-  }).catch(function(err){
-    toast("❌ 파일 읽기 실패: " + err.message);
-  });
+      toast("✅ "+rawBody.length+"개 행 로드 — 컬럼을 지정하세요");
+    }catch(err){toast("❌ 파싱 오류: "+err.message);}
+  }).catch(function(err){toast("❌ 파일 읽기 실패: "+err.message);});
 }
 
 function applyMap(){
-  const iN = document.getElementById("sN").value;
-  const i1 = document.getElementById("sT1").value;
-  const i2 = document.getElementById("sT2").value;
-
-  if(iN === "" || i1 === ""){
-    toast("❌ 업체명과 TAX1은 필수입니다");
-    return;
-  }
-
-  rows = rawBody.map(function(r){
-    return {
-      name: String(r[iN] || "").trim(),
-      tax1: String(r[i1] || "").trim(),
-      tax2: i2 !== "" ? String(r[i2] || "").trim() : ""
-    };
-  }).filter(function(r){
-    return r.name;
-  });
-
-  results = {};
-  curF = "ALL";
-
-  document.getElementById("runBtn").disabled = false;
-  document.getElementById("totalCount").textContent = rows.length;
-  document.getElementById("doneCount").textContent = 0;
-  document.getElementById("c-ALL").textContent = rows.length;
+  const iN=document.getElementById("sN").value;
+  const i1=document.getElementById("sT1").value;
+  const i2=document.getElementById("sT2").value;
+  if(iN===""||i1===""){toast("❌ 업체명과 TAX1은 필수입니다");return;}
+  rows=rawBody.map(r=>({
+    name:String(r[iN]||"").trim(),
+    tax1:String(r[i1]||"").trim(),
+    tax2:i2!==""?String(r[i2]||"").trim():""
+  })).filter(r=>r.name);
+  results={};curF="ALL";
+  document.getElementById("runBtn").disabled=false;
+  document.getElementById("totalCount").textContent=rows.length;
+  document.getElementById("doneCount").textContent=0;
+  document.getElementById("c-ALL").textContent=rows.length;
   document.getElementById("pills").classList.add("on");
-  document.getElementById("dlBtn").style.display = "none";
-
-  updateCounts();
-  renderTable();
-
-  toast("✅ " + rows.length + "개 업체 적용 — 조회 버튼을 눌러주세요");
+  document.getElementById("dlBtn").style.display="none";
+  updateCounts();renderTable();
+  toast("✅ "+rows.length+"개 업체 적용 — 조회 버튼을 눌러주세요");
 }
 
-/* =========================
-   국세청 API
-========================= */
+/* ── 국세청 API ── */
 async function ntsQuery(nos){
-  const r = await fetch(NTS_URL, {
+  const r=await fetch(NTS_URL,{
     method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "accept":"application/json"
-    },
-    body: JSON.stringify({ b_no: nos })
+    headers:{"Content-Type":"application/json","accept":"application/json"},
+    body:JSON.stringify({b_no:nos})
   });
-
-  if(!r.ok) throw new Error("NTS HTTP " + r.status);
-
+  if(!r.ok)throw new Error("NTS HTTP "+r.status);
   return r.json();
 }
 
-/* =========================
-   Bizno API 수정 최종 버전
-========================= */
-async function biznoLookup(bno){
-  const cleanNo = cl(bno);
+/* ── Bizno API: 사업자번호로 XML 조회 후 파싱 ── */
+async function biznoLookup(bizNo){
+  const cleanNo=cl(bizNo);
+  if(!cleanNo||cleanNo.length!==10)return{biznoName:"",error:true,message:"invalid"};
 
-  if(!cleanNo || cleanNo.length !== 10){
-    return {
-      biznoName:"",
-      raw:null,
-      error:true,
-      message:"Invalid business number"
-    };
-  }
+  // gb=1: 사업자번호로 조회
+  // gb=2: 상호명으로 조회
+  // type=xml 명시
+  const url=`https://bizno.net/api/fapi?key=${encodeURIComponent(BIZNO_KEY)}&gb=1&q=${cleanNo}&type=xml`;
 
-  /*
-    1차: POST x-www-form-urlencoded
-  */
   try{
-    const form = new URLSearchParams();
-    form.append("key", BIZNO_KEY);
-    form.append("gb", "2");
-    form.append("q", cleanNo);
+    const res=await fetch(url,{method:"GET"});
+    const text=await res.text();
+    console.log("BIZNO ["+cleanNo+"]:", text.slice(0,500));
 
-    const res = await fetch(BIZNO_URL, {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8",
-        "Accept":"application/json,text/plain,*/*"
-      },
-      body:form.toString()
+    const parser=new DOMParser();
+    const xml=parser.parseFromString(text,"text/xml");
+
+    // totalCount 확인
+    const tcEl=xml.querySelector("totalCount,TotalCount,total_count");
+    const tc=tcEl?parseInt(tcEl.textContent.trim(),10):0;
+
+    if(tc===0){
+      // gb=1 실패시 gb=2(상호명 검색)로 재시도는 하지 않음
+      // 대신 콘솔에 전체 XML 출력해서 구조 파악
+      console.log("BIZNO totalCount=0, full XML:", text);
+      return{biznoName:"",error:false,message:"not found"};
+    }
+
+    // item 안의 모든 태그를 탐색해서 상호명 찾기
+    const item=xml.querySelector("item");
+    if(!item)return{biznoName:"",error:false,message:"no item"};
+
+    // 콘솔에 item 전체 태그 출력 (어떤 필드명인지 확인용)
+    const tagMap={};
+    item.querySelectorAll("*").forEach(el=>{
+      if(el.textContent.trim()&&!el.children.length){
+        tagMap[el.tagName]=el.textContent.trim();
+      }
     });
+    console.log("BIZNO item fields ["+cleanNo+"]:", JSON.stringify(tagMap));
 
-    const text = await res.text();
-
-    console.log("BIZNO RAW POST:", cleanNo, text);
-
-    if(!res.ok){
-      throw new Error("BIZNO POST HTTP " + res.status + " / " + text.slice(0,120));
-    }
-
-    let data;
-
-    try{
-      data = JSON.parse(text);
-    }catch(e){
-      /*
-        JSON이 아니면 오류로 처리
-      */
-      return {
-        biznoName:"",
-        raw:text,
-        error:true,
-        message:"POST response is not JSON"
-      };
-    }
-
-    const name = extractBiznoName(data);
-
-    return {
-      biznoName:name || "",
-      raw:data,
-      error:false
-    };
-
-  }catch(postErr){
-    /*
-      2차: GET fallback
-    */
-    try{
-      const url =
-        BIZNO_URL +
-        "?key=" + encodeURIComponent(BIZNO_KEY) +
-        "&gb=2" +
-        "&q=" + encodeURIComponent(cleanNo);
-
-      const res2 = await fetch(url, {
-        method:"GET",
-        headers:{
-          "Accept":"application/json,text/plain,*/*"
-        }
-      });
-
-      const text2 = await res2.text();
-
-      console.log("BIZNO RAW GET:", cleanNo, text2);
-
-      if(!res2.ok){
-        throw new Error("BIZNO GET HTTP " + res2.status + " / " + text2.slice(0,120));
+    // 상호명 필드 순서대로 탐색
+    const nameFields=[
+      "b_nm","bNm","bizName","companyName","company_name","company",
+      "corp_nm","corpName","name","entrnm","korentrnm",
+      "상호명","상호","업체명","회사명","법인명"
+    ];
+    for(const f of nameFields){
+      const el=item.querySelector(f);
+      if(el&&el.textContent.trim()){
+        return{biznoName:el.textContent.trim(),error:false};
       }
-
-      let data2;
-
-      try{
-        data2 = JSON.parse(text2);
-      }catch(e){
-        return {
-          biznoName:"",
-          raw:text2,
-          error:true,
-          message:"GET response is not JSON"
-        };
-      }
-
-      const name2 = extractBiznoName(data2);
-
-      return {
-        biznoName:name2 || "",
-        raw:data2,
-        error:false
-      };
-
-    }catch(getErr){
-      return {
-        biznoName:"",
-        raw:null,
-        error:true,
-        message:getErr.message || postErr.message
-      };
     }
+
+    // 태그맵에서 이름처럼 보이는 값 자동 추출
+    for(const[tag,val]of Object.entries(tagMap)){
+      const tl=tag.toLowerCase();
+      if(tl.includes("nm")||tl.includes("name")||tl.includes("상호")||tl.includes("업체")){
+        return{biznoName:val,error:false};
+      }
+    }
+
+    return{biznoName:"",error:false,message:"name field not found in: "+Object.keys(tagMap).join(",")};
+
+  }catch(e){
+    console.error("BIZNO error ["+cleanNo+"]:",e.message);
+    return{biznoName:"",error:true,message:e.message};
   }
 }
 
-/* =========================
-   병렬 처리 실행기
-========================= */
-async function runConcurrent(items, limit, worker, onProgress){
-  let idx = 0;
-  let done = 0;
-
+/* ── 병렬 처리 ── */
+async function runConcurrent(items,limit,worker,onProgress){
+  let idx=0,done=0;
   async function runner(){
-    while(idx < items.length){
-      const current = idx++;
-      try{
-        await worker(items[current], current);
-      }catch(e){
-        console.warn("worker error", e);
-      }finally{
-        done++;
-        if(onProgress) onProgress(done, items.length);
-      }
+    while(idx<items.length){
+      const cur=idx++;
+      try{await worker(items[cur],cur);}
+      catch(e){console.warn("worker err",e);}
+      finally{done++;if(onProgress)onProgress(done,items.length);}
     }
   }
-
-  const workers = [];
-  const workerCount = Math.min(limit, items.length);
-
-  for(let i = 0; i < workerCount; i++){
-    workers.push(runner());
-  }
-
+  const workers=[];
+  for(let i=0;i<Math.min(limit,items.length);i++)workers.push(runner());
   await Promise.all(workers);
 }
 
-/* =========================
-   전체 조회
-========================= */
+/* ── 전체 조회 ── */
 async function startCheck(){
-  if(running || rows.length === 0) return;
-
-  running = true;
-  results = {};
-  curF = "ALL";
-
-  const btn = document.getElementById("runBtn");
-  btn.disabled = true;
-  btn.textContent = "조회 중...";
-
+  if(running||rows.length===0)return;
+  running=true;results={};curF="ALL";
+  const btn=document.getElementById("runBtn");
+  btn.disabled=true;btn.textContent="조회 중...";
   document.getElementById("pgw").classList.add("on");
   document.getElementById("pgl").classList.add("on");
-  document.getElementById("dlBtn").style.display = "none";
-  document.getElementById("pgb").style.width = "0%";
-
-  document.querySelectorAll(".pill").forEach(function(p){
-    p.classList.toggle("act", p.dataset.s === "ALL");
-  });
-
+  document.getElementById("dlBtn").style.display="none";
+  document.getElementById("pgb").style.width="0%";
+  document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("act",p.dataset.s==="ALL"));
   renderTable();
 
   try{
-    /*
-      1단계: 후보 사업자번호 구성
-    */
-    const jobs = rows.map(function(r, idx){
-      const v1 = isV(r.tax1);
-      const v2 = isV(r.tax2);
-
-      return {
-        idx,
-        name: r.name,
-        cands: [v1 ? cl(r.tax1) : null, v2 ? cl(r.tax2) : null].filter(Boolean),
-        noV: !v1 && !v2
-      };
+    /* 1단계: 후보 번호 구성 */
+    const jobs=rows.map((r,idx)=>{
+      const v1=isV(r.tax1),v2=isV(r.tax2);
+      return{idx,name:r.name,cands:[v1?cl(r.tax1):null,v2?cl(r.tax2):null].filter(Boolean),noV:!v1&&!v2};
     });
+    const allNos=[...new Set(jobs.flatMap(j=>j.cands))];
+    const nmap={};
 
-    const allNos = [...new Set(jobs.flatMap(function(j){ return j.cands; }))];
-    const nmap = {};
-
-    /*
-      2단계: 국세청 API batch 조회
-    */
-    if(allNos.length > 0){
-      for(let i = 0; i < allNos.length; i += 100){
-        const batch = allNos.slice(i, i + 100);
-
-        try{
-          const d = await ntsQuery(batch);
-
-          (d.data || []).forEach(function(it){
-            nmap[it.b_no] = it;
-          });
-
-        }catch(e){
-          batch.forEach(function(n){
-            nmap[n] = {__err:true};
-          });
-        }
-
-        setProgress(Math.min(i + 100, allNos.length), allNos.length, "국세청");
-        await sleep(180);
-      }
+    /* 2단계: 국세청 batch 조회 */
+    for(let i=0;i<allNos.length;i+=100){
+      const batch=allNos.slice(i,i+100);
+      try{
+        const d=await ntsQuery(batch);
+        (d.data||[]).forEach(it=>{nmap[it.b_no]=it;});
+      }catch(e){batch.forEach(n=>{nmap[n]={__err:true};});}
+      setProgress(Math.min(i+100,allNos.length),allNos.length,"국세청");
+      await sleep(180);
     }
 
-    /*
-      3단계: 국세청 결과 확정
-    */
+    /* 3단계: 국세청 결과 확정 */
     for(const j of jobs){
-      let finalRes = null;
-
+      let finalRes=null;
       if(j.noV){
-        finalRes = {status:"TAX_ERR"};
+        finalRes={status:"TAX_ERR",biznoName:"",nameCheck:"조회 제외"};
       }else{
-        let res = null;
-
+        let res=null;
         for(const no of j.cands){
-          const it = nmap[no];
-
-          if(!it){
-            res = {status:"NOT_FOUND", no:fmt(no)};
-            continue;
-          }
-
-          if(it.__err){
-            res = {status:"API_ERR", no:fmt(no)};
-            continue;
-          }
-
-          const st = it.b_stt || "";
-          const ed = it.end_dt || "";
-          const tp = it.tax_type || "";
-
-          if(!st && tp.includes("등록되지 않은")){
-            res = {status:"NOT_FOUND", no:fmt(no)};
-            continue;
-          }
-
-          res = {
-            status: st || "NOT_FOUND",
-            no: fmt(no),
-            endDt: ed,
-            taxType: tp,
-            biznoName: "",
-            nameCheck: ""
-          };
-
-          /*
-            TAX1/TAX2 중 계속사업자가 있으면 그 번호 우선 사용
-          */
-          if(st === "계속사업자") break;
+          const it=nmap[no];
+          if(!it){res={status:"NOT_FOUND",no:fmt(no)};continue;}
+          if(it.__err){res={status:"API_ERR",no:fmt(no)};continue;}
+          const st=it.b_stt||"",ed=it.end_dt||"",tp=it.tax_type||"";
+          if(!st&&tp.includes("등록되지 않은")){res={status:"NOT_FOUND",no:fmt(no)};continue;}
+          res={status:st||"NOT_FOUND",no:fmt(no),endDt:ed,taxType:tp,biznoName:"",nameCheck:""};
+          if(st==="계속사업자")break;
         }
-
-        finalRes = res || {status:"NOT_FOUND"};
+        finalRes=res||{status:"NOT_FOUND"};
+        finalRes.biznoName="";
+        finalRes.nameCheck=finalRes.status==="계속사업자"?"대기":"조회 제외";
       }
-
-      if(finalRes.status !== "계속사업자"){
-        finalRes.biznoName = "";
-        finalRes.nameCheck = "조회 제외";
-      }else{
-        finalRes.biznoName = "";
-        finalRes.nameCheck = "대기";
-      }
-
-      results[j.idx] = finalRes;
+      results[j.idx]=finalRes;
     }
+    updateCounts();renderTable();
 
-    updateCounts();
-    renderTable();
-
-    /*
-      4단계: 계속사업자만 Bizno 병렬 조회
-    */
-    const biznoTargets = jobs.filter(function(j){
-      const res = results[j.idx];
-      return res && res.status === "계속사업자" && res.no;
+    /* 4단계: 계속사업자만 Bizno 조회 */
+    const biznoTargets=jobs.filter(j=>{
+      const res=results[j.idx];
+      return res&&res.status==="계속사업자"&&res.no;
     });
 
-    if(biznoTargets.length > 0){
-      setProgress(0, biznoTargets.length, "Bizno");
-
-      await runConcurrent(
-        biznoTargets,
-        BIZNO_CONCURRENCY,
+    if(biznoTargets.length>0){
+      setProgress(0,biznoTargets.length,"Bizno");
+      await runConcurrent(biznoTargets,BIZNO_CONCURRENCY,
         async function(j){
-          const res = results[j.idx];
-
+          const res=results[j.idx];
+          await sleep(300); // rate limit 방지
           try{
-            const bz = await biznoLookup(res.no);
-
+            const bz=await biznoLookup(res.no);
             if(bz.error){
-              res.biznoName = "";
-              res.nameCheck = "BIZNO 오류";
-              res.biznoError = bz.message || "";
+              res.biznoName="";res.nameCheck="BIZNO 오류";res.biznoError=bz.message||"";
             }else{
-              res.biznoName = bz.biznoName || "";
-              res.nameCheck = compareName(j.name, res.biznoName);
-              res.biznoRaw = bz.raw;
+              res.biznoName=bz.biznoName||"";
+              res.nameCheck=res.biznoName?compareName(j.name,res.biznoName):"확인불가";
             }
-
           }catch(e){
-            res.biznoName = "";
-            res.nameCheck = "BIZNO 오류";
-            res.biznoError = e.message;
+            res.biznoName="";res.nameCheck="BIZNO 오류";res.biznoError=e.message;
           }
-
-          results[j.idx] = res;
+          results[j.idx]=res;
         },
-        function(done, total){
-          setProgress(done, total, "Bizno");
-          document.getElementById("doneCount").textContent = rows.length;
-
-          if(done % 3 === 0 || done === total){
-            renderTable();
-          }
+        function(done,total){
+          setProgress(done,total,"Bizno");
+          if(done%2===0||done===total)renderTable();
         }
       );
     }
 
-    /*
-      5단계: 완료 처리
-    */
-    running = false;
-
-    btn.disabled = false;
-    btn.textContent = "🔄 전체 조회 / 새로고침";
-
+    /* 5단계: 완료 */
+    running=false;
+    btn.disabled=false;btn.textContent="🔄 전체 조회 / 새로고침";
     document.getElementById("pgw").classList.remove("on");
     document.getElementById("pgl").classList.remove("on");
-
-    document.getElementById("doneCount").textContent = rows.length;
-    document.getElementById("lastTime").textContent = new Date().toLocaleTimeString("ko-KR");
-    document.getElementById("dlBtn").style.display = "block";
-
-    updateCounts();
-    renderTable();
-
-    toast("✅ 조회 완료 — " + rows.length + "개 / Bizno 확인 " + biznoTargets.length + "개");
+    document.getElementById("doneCount").textContent=rows.length;
+    document.getElementById("lastTime").textContent=new Date().toLocaleTimeString("ko-KR");
+    document.getElementById("dlBtn").style.display="block";
+    updateCounts();renderTable();
+    toast("✅ 조회 완료 — "+rows.length+"개 / Bizno "+biznoTargets.length+"개");
 
   }catch(e){
-    running = false;
-
-    btn.disabled = false;
-    btn.textContent = "🔄 전체 조회 / 새로고침";
-
+    running=false;
+    btn.disabled=false;btn.textContent="🔄 전체 조회 / 새로고침";
     document.getElementById("pgw").classList.remove("on");
     document.getElementById("pgl").classList.remove("on");
-
-    toast("❌ 조회 중 오류: " + e.message);
+    toast("❌ 오류: "+e.message);
   }
 }
 
-/* =========================
-   엑셀 다운로드
-========================= */
+/* ── 엑셀 다운로드 ── */
 function dlExcel(){
-  if(rows.length === 0 || !window.XLSX) return;
-
-  const SL = {
-    "계속사업자":"계속영업",
-    "휴업자":"휴업중",
-    "폐업자":"폐업",
-    TAX_ERR:"TAX ERROR",
-    NOT_FOUND:"미등록",
-    API_ERR:"API오류"
-  };
-
-  const data = rows.map(function(r, i){
-    const res = results[i] || {};
-
-    return {
-      "순번": i + 1,
-      "업체명": r.name,
-      "TAX1": r.tax1,
-      "TAX2": r.tax2,
-      "상태": SL[res.status] || "—",
-      "사업자번호": res.no || "—",
-      "과세유형": res.taxType || "—",
-      "폐업일": res.endDt || "—",
-      "비즈노 등록명": res.biznoName || "—",
-      "명칭 비교": res.nameCheck || "—",
-      "Bizno 오류메시지": res.biznoError || ""
-    };
+  if(rows.length===0||!window.XLSX)return;
+  const SL={"계속사업자":"계속영업","휴업자":"휴업중","폐업자":"폐업",TAX_ERR:"TAX ERROR",NOT_FOUND:"미등록",API_ERR:"API오류"};
+  const data=rows.map((r,i)=>{
+    const res=results[i]||{};
+    return{"순번":i+1,"업체명":r.name,"TAX1":r.tax1,"TAX2":r.tax2,
+      "상태":SL[res.status]||"—","사업자번호":res.no||"—",
+      "과세유형":res.taxType||"—","폐업일":res.endDt||"—",
+      "비즈노 등록명":res.biznoName||"—","명칭 비교":res.nameCheck||"—",
+      "Bizno 오류":res.biznoError||""};
   });
-
-  const ws = XLSX.utils.json_to_sheet(data);
-
-  ws["!cols"] = [
-    {wch:5},
-    {wch:28},
-    {wch:14},
-    {wch:14},
-    {wch:12},
-    {wch:16},
-    {wch:28},
-    {wch:12},
-    {wch:32},
-    {wch:14},
-    {wch:35}
-  ];
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "결과");
-
-  const n = new Date();
-  const fileName =
-    "사업자조회_Bizno_" +
-    n.getFullYear() +
-    String(n.getMonth() + 1).padStart(2, "0") +
-    String(n.getDate()).padStart(2, "0") +
-    "_" +
-    String(n.getHours()).padStart(2, "0") +
-    String(n.getMinutes()).padStart(2, "0") +
-    ".xlsx";
-
-  XLSX.writeFile(wb, fileName);
-
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws["!cols"]=[{wch:5},{wch:28},{wch:14},{wch:14},{wch:12},{wch:16},{wch:28},{wch:12},{wch:32},{wch:14},{wch:35}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"결과");
+  const n=new Date();
+  const ts=n.getFullYear()+String(n.getMonth()+1).padStart(2,"0")+String(n.getDate()).padStart(2,"0")+"_"+String(n.getHours()).padStart(2,"0")+String(n.getMinutes()).padStart(2,"0");
+  XLSX.writeFile(wb,"사업자조회_Bizno_"+ts+".xlsx");
   toast("📥 다운로드 완료");
 }
 
-/* =========================
-   필터 / 카운트 / 렌더링
-========================= */
+/* ── 필터/렌더 ── */
 function setF(f){
-  curF = f;
-
-  document.querySelectorAll(".pill").forEach(function(p){
-    p.classList.toggle("act", p.dataset.s === f);
-  });
-
+  curF=f;
+  document.querySelectorAll(".pill").forEach(p=>p.classList.toggle("act",p.dataset.s===f));
   renderTable();
 }
-
 function updateCounts(){
-  const c = {};
-
-  Object.values(results).forEach(function(r){
-    if(!r || !r.status) return;
-    c[r.status] = (c[r.status] || 0) + 1;
+  const c={};
+  Object.values(results).forEach(r=>{if(r&&r.status)c[r.status]=(c[r.status]||0)+1;});
+  ["계속사업자","폐업자","휴업자","NOT_FOUND","TAX_ERR","API_ERR"].forEach(k=>{
+    const el=document.getElementById("c-"+k);if(el)el.textContent=c[k]||0;
   });
-
-  ["계속사업자","폐업자","휴업자","NOT_FOUND","TAX_ERR","API_ERR"].forEach(function(k){
-    const el = document.getElementById("c-" + k);
-    if(el) el.textContent = c[k] || 0;
-  });
-
-  document.getElementById("c-ALL").textContent = rows.length;
+  document.getElementById("c-ALL").textContent=rows.length;
 }
-
 function taxTag(v){
-  if(!v) return '<span style="color:var(--tx3)">—</span>';
-
-  const ok = isV(v);
-
-  return '<span class="tt ' + (ok ? "tok" : "tbad") + '">' +
-    (ok ? fmt(cl(v)) : escapeHtml(v)) +
-    (ok ? "" : " ⚠") +
-    '</span>';
+  if(!v)return'<span style="color:var(--tx3)">—</span>';
+  const ok=isV(v);
+  return'<span class="tt '+(ok?"tok":"tbad")+'">'+(ok?fmt(cl(v)):escHtml(v))+(ok?"":" ⚠")+'</span>';
 }
-
-function bdg(s){
-  const c = SC[s] || SC.NOT_FOUND;
-  return '<span class="badge ' + c.cls + '">' + c.icon + ' ' + c.lab + '</span>';
-}
-
+function bdg(s){const c=SC[s]||SC.NOT_FOUND;return'<span class="badge '+c.cls+'">'+c.icon+' '+c.lab+'</span>';}
 function renderTable(){
-  const tb = document.getElementById("tbody");
-
-  if(rows.length === 0){
-    tb.innerHTML =
-      '<tr><td colspan="10" class="ec"><div class="ei">📂</div>엑셀 파일을 선택해 주세요</td></tr>';
-    return;
-  }
-
-  const vis = rows
-    .map(function(r, idx){ return {r, idx}; })
-    .filter(function(x){
-      const res = results[x.idx];
-      return curF === "ALL" || (res && res.status === curF);
-    });
-
-  if(vis.length === 0){
-    tb.innerHTML =
-      '<tr><td colspan="10" class="ec"><div class="ei">📭</div>해당 상태의 업체가 없습니다</td></tr>';
-    return;
-  }
-
-  tb.innerHTML = vis.map(function(x){
-    const r = x.r;
-    const i = x.idx;
-    const res = results[i];
-    const st = res ? res.status : (running ? "PENDING" : null);
-    const tp = res && res.taxType && !res.taxType.includes("등록되지 않은") ? res.taxType : "—";
-    const bizName = res && res.biznoName ? res.biznoName : "—";
-    const nameCheck = res && res.nameCheck ? res.nameCheck : "—";
-
-    return '' +
-      '<tr>' +
-        '<td class="num">' + (i + 1) + '</td>' +
-        '<td class="cn">' + escapeHtml(r.name) + '</td>' +
-        '<td>' + taxTag(r.tax1) + '</td>' +
-        '<td>' + taxTag(r.tax2) + '</td>' +
-        '<td>' + (st ? bdg(st) : '<span style="color:var(--tx3)">—</span>') + '</td>' +
-        '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--sk)">' +
-          (res && res.no ? res.no : "—") +
-        '</span></td>' +
-        '<td><span style="font-size:12px;color:var(--tx2)">' + escapeHtml(tp) + '</span></td>' +
-        '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--rd)">' +
-          (res && res.endDt ? res.endDt : "—") +
-        '</span></td>' +
-        '<td><span style="font-size:12px;color:var(--tx2)">' + escapeHtml(bizName) + '</span></td>' +
-        '<td><span class="tt ' + nameCheckClass(nameCheck) + '">' + escapeHtml(nameCheck) + '</span></td>' +
-      '</tr>';
+  const tb=document.getElementById("tbody");
+  if(rows.length===0){tb.innerHTML='<tr><td colspan="10" class="ec"><div class="ei">📂</div>엑셀 파일을 선택해 주세요</td></tr>';return;}
+  const vis=rows.map((r,idx)=>({r,idx})).filter(x=>curF==="ALL"||(results[x.idx]&&results[x.idx].status===curF));
+  if(vis.length===0){tb.innerHTML='<tr><td colspan="10" class="ec"><div class="ei">📭</div>해당 상태의 업체가 없습니다</td></tr>';return;}
+  tb.innerHTML=vis.map(x=>{
+    const r=x.r,i=x.idx,res=results[i];
+    const st=res?res.status:(running?"PENDING":null);
+    const tp=res&&res.taxType&&!res.taxType.includes("등록되지 않은")?res.taxType:"—";
+    const bizName=res&&res.biznoName?res.biznoName:"—";
+    const nc=res&&res.nameCheck?res.nameCheck:"—";
+    return'<tr>'+
+      '<td class="num">'+(i+1)+'</td>'+
+      '<td class="cn">'+escHtml(r.name)+'</td>'+
+      '<td>'+taxTag(r.tax1)+'</td>'+
+      '<td>'+taxTag(r.tax2)+'</td>'+
+      '<td>'+(st?bdg(st):'<span style="color:var(--tx3)">—</span>')+'</td>'+
+      '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--sk)">'+(res&&res.no?res.no:"—")+'</span></td>'+
+      '<td><span style="font-size:12px;color:var(--tx2)">'+escHtml(tp)+'</span></td>'+
+      '<td><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--rd)">'+(res&&res.endDt?res.endDt:"—")+'</span></td>'+
+      '<td><span style="font-size:12px;color:var(--tx2)">'+escHtml(bizName)+'</span></td>'+
+      '<td><span class="tt '+nameCheckClass(nc)+'">'+escHtml(nc)+'</span></td>'+
+    '</tr>';
   }).join("");
 }
-
-/* =========================
-   Toast
-========================= */
 let tt;
-
 function toast(msg){
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("on");
-
-  clearTimeout(tt);
-
-  tt = setTimeout(function(){
-    el.classList.remove("on");
-  }, 3500);
+  const el=document.getElementById("toast");
+  el.textContent=msg;el.classList.add("on");
+  clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("on"),3500);
 }
-
 renderTable();
 </script>
 </body>
